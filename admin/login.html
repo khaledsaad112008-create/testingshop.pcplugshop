@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('pc_plug_theme')||'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Admin Login — PC PLUG</title>
+  <link rel="icon" href="../images/logo.png" type="image/png" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body class="admin-body">
+  <div class="login-wrap">
+    <div class="login-card">
+      <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" style="margin: 0 auto 16px;">🌙</button>
+      <img src="../images/logo.png" alt="PC PLUG logo" />
+      <h1>Admin Login</h1>
+      <p class="sub">Sign in to manage the PC PLUG catalog</p>
+      <form id="loginForm">
+        <div class="field">
+          <label for="passwordInput">Password</label>
+          <input type="password" id="passwordInput" placeholder="Enter admin password" required autofocus />
+        </div>
+        <div class="field-error" id="loginError"></div>
+        <button type="submit" class="btn btn-primary btn-block">Log In</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="../js/admin.js"></script>
+  <script src="../js/theme.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      initLoginPage();
+      initThemeToggle();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+/* ==========================================================================
+   PLUG — Admin theme (shares palette with css/style.css)
+   ========================================================================== */
+@import url("style.css");
+
+body.admin-body {
+  background:
+    radial-gradient(ellipse at top, var(--color-glow), transparent 55%),
+    var(--color-bg);
+}
+
+/* ---------- Login ---------- */
+.login-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 380px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+  box-shadow: var(--shadow-card);
+  text-align: center;
+}
+
+.login-card img {
+  height: 56px;
+  width: 56px;
+  object-fit: contain;
+  margin: 0 auto 12px;
+  filter: drop-shadow(0 0 10px var(--color-glow));
+}
+
+.login-card h1 {
+  font-size: 1.3rem;
+  margin: 0 0 4px;
+}
+
+.login-card p.sub {
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+  margin: 0 0 24px;
+}
+
+.field {
+  text-align: left;
+  margin-bottom: 16px;
+}
+
+.field label {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  font-family: inherit;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-glow);
+}
+
+.field-error {
+  color: var(--color-danger);
+  font-size: 0.85rem;
+  margin-top: 10px;
+  min-height: 1.1em;
+}
+
+/* ---------- Admin shell ---------- */
+.admin-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--color-bg-glass);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.admin-header-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.admin-header .badge {
+  background: rgba(108, 60, 233, 0.15);
+  color: var(--color-primary-light);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--color-primary);
+}
+
+.admin-nav {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.admin-nav a {
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  font-weight: 500;
+  font-size: 0.92rem;
+  transition: background var(--transition), color var(--transition);
+}
+
+.admin-nav a:hover,
+.admin-nav a.active {
+  background: var(--color-surface);
+  color: var(--color-primary-light);
+}
+
+.admin-main {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+  width: 100%;
+  flex: 1;
+}
+
+.admin-main h1 {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+}
+
+.admin-main .page-sub {
+  color: var(--color-text-muted);
+  margin: 0 0 28px;
+  font-size: 0.95rem;
+}
+
+/* ---------- Stat cards ---------- */
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 28px;
+}
+
+.stat-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 18px 20px;
+}
+
+.stat-card .label {
+  color: var(--color-text-faint);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 8px;
+}
+
+.stat-card .value {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--color-primary-light);
+}
+
+/* ---------- Panels ---------- */
+.panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  margin-bottom: 28px;
+}
+
+.panel h2 {
+  margin: 0 0 18px;
+  font-size: 1.1rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.form-grid .field.full {
+  grid-column: 1 / -1;
+}
+
+.image-input-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.image-input-row input[type="text"] {
+  flex: 1;
+}
+
+.image-preview {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.file-btn {
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.file-btn input[type="file"] {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* ---------- Table ---------- */
+.table-wrap {
+  overflow-x: auto;
+}
+
+table.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+table.admin-table th,
+table.admin-table td {
+  text-align: left;
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--color-border);
+  white-space: nowrap;
+}
+
+table.admin-table th {
+  color: var(--color-text-faint);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+
+table.admin-table tbody tr:hover {
+  background: var(--color-surface-raised);
+}
+
+table.admin-table img.thumb-sm {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  background: var(--color-bg-alt);
+}
+
+table.admin-table td.actions-cell {
+  display: flex;
+  gap: 6px;
+}
+
+table.admin-table input,
+table.admin-table select {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  padding: 6px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 0.86rem;
+  width: 100%;
+  min-width: 90px;
+}
+
+.stock-pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.stock-pill.ok {
+  background: rgba(74, 222, 128, 0.14);
+  color: var(--color-success);
+}
+
+.stock-pill.low {
+  background: rgba(251, 191, 36, 0.14);
+  color: var(--color-warning);
+}
+
+.stock-pill.out {
+  background: rgba(248, 113, 113, 0.14);
+  color: var(--color-danger);
+}
+
+.panel-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.panel-header-row h2 {
+  margin: 0;
+}

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('pc_plug_theme')||'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Dashboard — PC PLUG Admin</title>
+  <link rel="icon" href="../images/logo.png" type="image/png" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body class="admin-body">
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <a href="dashboard.html" class="brand">
+        <img src="../images/logo.png" alt="PC PLUG logo" />
+        <span>PC PLUG</span>
+      </a>
+      <span class="badge">Admin</span>
+      <nav class="admin-nav">
+        <a href="dashboard.html" class="active">Dashboard</a>
+        <a href="reports.html">Reports</a>
+        <a href="../index.html">View Store</a>
+        <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+        <a href="#" id="logoutBtn">Log Out</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <h1>Dashboard</h1>
+    <p class="page-sub">Manage your product catalog</p>
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="label">Total Products</div>
+        <div class="value" id="statTotalProducts">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Total Units in Stock</div>
+        <div class="value" id="statTotalUnits">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Total Stock Value</div>
+        <div class="value" id="statStockValue">$0.00</div>
+      </div>
+    </div>
+
+    <section class="panel">
+      <h2>Add New Product</h2>
+      <form id="addProductForm">
+        <div class="form-grid">
+          <div class="field full">
+            <label for="newName">Product Name</label>
+            <input type="text" id="newName" required />
+          </div>
+          <div class="field">
+            <label for="newPrice">Price ($)</label>
+            <input type="number" id="newPrice" min="0" step="0.01" required />
+          </div>
+          <div class="field">
+            <label for="newCategory">Category</label>
+            <input type="text" id="newCategory" list="categoryList" required />
+            <datalist id="categoryList"></datalist>
+          </div>
+          <div class="field">
+            <label for="newStock">Stock Quantity</label>
+            <input type="number" id="newStock" min="0" step="1" required />
+          </div>
+          <div class="field full">
+            <label for="newImageUrl">Product Image</label>
+            <div class="image-input-row">
+              <img class="image-preview" id="newImagePreview" src="https://picsum.photos/seed/plug-default/100/100" alt="" />
+              <input type="text" id="newImageUrl" placeholder="Image URL (or upload a file)" />
+              <button type="button" class="btn btn-outline file-btn">
+                Upload
+                <input type="file" id="newImageFile" accept="image/*" />
+              </button>
+            </div>
+          </div>
+          <div class="field full">
+            <label for="newDescription">Description</label>
+            <textarea id="newDescription" rows="3"></textarea>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Product</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header-row">
+        <h2>All Products</h2>
+      </div>
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="adminProductsBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="../js/products.js"></script>
+  <script src="../js/cart.js"></script>
+  <script src="../js/admin.js"></script>
+  <script src="../js/theme.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const categoryList = document.getElementById("categoryList");
+      categoryList.innerHTML = getCategories()
+        .map((c) => `<option value="${c}"></option>`)
+        .join("");
+      initDashboardPage();
+      initThemeToggle();
+    });
+  </script>
+</body>
+</html>

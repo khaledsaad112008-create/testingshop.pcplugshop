@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('pc_plug_theme')||'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Reports — PC PLUG Admin</title>
+  <link rel="icon" href="../images/logo.png" type="image/png" />
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body class="admin-body">
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <a href="dashboard.html" class="brand">
+        <img src="../images/logo.png" alt="PC PLUG logo" />
+        <span>PC PLUG</span>
+      </a>
+      <span class="badge">Admin</span>
+      <nav class="admin-nav">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="reports.html" class="active">Reports</a>
+        <a href="../index.html">View Store</a>
+        <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+        <a href="#" id="logoutBtn">Log Out</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <h1>Reports</h1>
+    <p class="page-sub">Full product catalog and inventory value</p>
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="label">Total Products</div>
+        <div class="value" id="reportTotalProducts">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Total Units in Stock</div>
+        <div class="value" id="reportTotalUnits">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Total Stock Value</div>
+        <div class="value" id="reportStockValue">$0.00</div>
+      </div>
+    </div>
+
+    <section class="panel">
+      <div class="panel-header-row">
+        <h2>Product Catalog</h2>
+        <button class="btn btn-primary" id="exportBtn">⬇ Export to Excel</button>
+      </div>
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Stock Value</th>
+              <th>ID</th>
+            </tr>
+          </thead>
+          <tbody id="reportsBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+  <script src="../js/products.js"></script>
+  <script src="../js/admin.js"></script>
+  <script src="../js/excel.js"></script>
+  <script src="../js/theme.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      initReportsPage();
+      initThemeToggle();
+    });
+  </script>
+</body>
+</html>
