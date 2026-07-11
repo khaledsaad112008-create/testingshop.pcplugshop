@@ -9,10 +9,9 @@
    to this.
    ========================================================================== */
 
-// SHA-256("admin123") — change this hash to change the password.
-const ADMIN_PASSWORD_HASH = "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9";
-// Only used if the browser has no crypto.subtle (very old/insecure context).
-const ADMIN_PASSWORD_FALLBACK = "admin123";
+// SHA-256 of the admin password — change this hash to change the password.
+// Never put the plaintext password in this file.
+const ADMIN_PASSWORD_HASH = "b3c2316b9efffb6ac1b34924111b5e9df9d4f1e93b221274a8919a233c160ffe";
 
 const ADMIN_SESSION_KEY = "pc_plug_admin_session";
 const ADMIN_LAST_ACTIVITY_KEY = "pc_plug_admin_last_activity";
@@ -124,9 +123,13 @@ function initLoginPage() {
 
     const password = passwordInput.value;
     const hash = await sha256Hex(password);
-    const match = hash ? hash === ADMIN_PASSWORD_HASH : password === ADMIN_PASSWORD_FALLBACK;
 
-    if (match) {
+    if (!hash) {
+      errorEl.textContent = "Your browser doesn't support secure login (requires HTTPS). Please use a modern browser over HTTPS.";
+      return;
+    }
+
+    if (hash === ADMIN_PASSWORD_HASH) {
       localStorage.removeItem(ADMIN_ATTEMPTS_KEY);
       localStorage.removeItem(ADMIN_LOCK_UNTIL_KEY);
       sessionStorage.setItem(ADMIN_SESSION_KEY, "true");
