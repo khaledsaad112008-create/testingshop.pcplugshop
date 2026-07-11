@@ -2,110 +2,140 @@
    PLUG — Product data + localStorage logic
    ========================================================================== */
 
-const PRODUCTS_KEY = "plug_products";
+const PRODUCTS_KEY = "pc_plug_products_v2";
+
+/* ---------- Category icons (used across the site) ---------- */
+const CATEGORY_ICONS = {
+  CPUs: "🧠",
+  GPUs: "🎮",
+  "Full PCs": "🖥️",
+  Monitors: "🖥️",
+  Keyboards: "⌨️",
+  "Gift Cards": "🎁",
+};
 
 /* ---------- Seed data ---------- */
 function defaultProducts() {
   return [
     {
       id: "p1",
-      name: "USB-C Fast Charge Plug (65W)",
-      price: 24.99,
-      category: "Chargers",
-      stock: 42,
-      image: "https://picsum.photos/seed/plug-usbc/500/400",
+      name: "AMD Ryzen 7 7800X3D",
+      price: 379.99,
+      category: "CPUs",
+      stock: 24,
+      image: "https://picsum.photos/seed/pcplug-cpu-amd/500/400",
       description:
-        "Compact 65W GaN wall charger with USB-C PD fast charging. Ideal for laptops, tablets and phones on the go.",
+        "8-core / 16-thread gaming CPU with 3D V-Cache for class-leading frame rates. Socket AM5.",
     },
     {
       id: "p2",
-      name: "Universal Travel Adapter",
-      price: 19.5,
-      category: "Adapters",
-      stock: 30,
-      image: "https://picsum.photos/seed/plug-travel/500/400",
+      name: "Intel Core i5-14600K",
+      price: 319.99,
+      category: "CPUs",
+      stock: 31,
+      image: "https://picsum.photos/seed/pcplug-cpu-intel/500/400",
       description:
-        "All-in-one travel adapter covering 150+ countries, with dual USB-A ports and a USB-C port built in.",
+        "14-core unlocked desktop processor, great price-to-performance for gaming and multitasking.",
     },
     {
       id: "p3",
-      name: "6-Outlet Surge Protector Power Strip",
-      price: 32.0,
-      category: "Power Strips",
-      stock: 18,
-      image: "https://picsum.photos/seed/plug-strip/500/400",
+      name: "NVIDIA GeForce RTX 4070 Super",
+      price: 599.99,
+      category: "GPUs",
+      stock: 14,
+      image: "https://picsum.photos/seed/pcplug-gpu-rtx/500/400",
       description:
-        "Heavy-duty power strip with 6 outlets and surge protection, 6ft braided cord, wall-mountable.",
+        "12GB GDDR6X graphics card with ray tracing and DLSS 3 — smooth 1440p and entry 4K gaming.",
     },
     {
       id: "p4",
-      name: "Braided USB-C to USB-C Cable (2m)",
-      price: 12.99,
-      category: "Cables",
-      stock: 75,
-      image: "https://picsum.photos/seed/plug-cable/500/400",
+      name: "AMD Radeon RX 7800 XT",
+      price: 549.0,
+      category: "GPUs",
+      stock: 0,
+      image: "https://picsum.photos/seed/pcplug-gpu-radeon/500/400",
       description:
-        "Durable nylon-braided cable rated for 100W charging and 480Mbps data transfer. 2 meter length.",
+        "16GB high-performance card built for 1440p ultra settings and high refresh rate gaming.",
     },
     {
       id: "p5",
-      name: "Smart Wi-Fi Plug",
-      price: 14.75,
-      category: "Smart Plugs",
-      stock: 55,
-      image: "https://picsum.photos/seed/plug-smart/500/400",
+      name: "PC PLUG Starter Gaming PC",
+      price: 999.0,
+      category: "Full PCs",
+      stock: 8,
+      image: "https://picsum.photos/seed/pcplug-fullpc-starter/500/400",
       description:
-        "App-controlled smart plug with voice assistant support, scheduling, and energy usage tracking.",
+        "Ryzen 5 + RTX 4060 prebuilt, 16GB RAM, 1TB NVMe SSD. Ready to play out of the box.",
     },
     {
       id: "p6",
-      name: "3-Prong to 2-Prong Adapter Pack (6x)",
-      price: 8.99,
-      category: "Adapters",
-      stock: 0,
-      image: "https://picsum.photos/seed/plug-3prong/500/400",
+      name: "PC PLUG Elite Gaming PC",
+      price: 1899.0,
+      category: "Full PCs",
+      stock: 5,
+      image: "https://picsum.photos/seed/pcplug-fullpc-elite/500/400",
       description:
-        "Grounded to ungrounded outlet adapters, pack of 6, industrial-grade construction.",
+        "Ryzen 7 + RTX 4070 Super prebuilt, 32GB RAM, 2TB NVMe SSD, liquid cooling, RGB build.",
     },
     {
       id: "p7",
-      name: "Desktop Charging Station (4-Port)",
-      price: 45.0,
-      category: "Chargers",
-      stock: 12,
-      image: "https://picsum.photos/seed/plug-station/500/400",
+      name: '27" 165Hz QHD Gaming Monitor',
+      price: 279.99,
+      category: "Monitors",
+      stock: 19,
+      image: "https://picsum.photos/seed/pcplug-monitor-165hz/500/400",
       description:
-        "4-port desktop charging hub with individual smart chips for optimal charging speed per device.",
+        "27-inch QHD IPS panel, 165Hz refresh rate, 1ms response time, FreeSync / G-Sync compatible.",
     },
     {
       id: "p8",
-      name: "Right-Angle USB-A to USB-C Cable (1m)",
-      price: 9.99,
-      category: "Cables",
-      stock: 60,
-      image: "https://picsum.photos/seed/plug-angle/500/400",
+      name: '34" Ultrawide Curved Monitor',
+      price: 449.99,
+      category: "Monitors",
+      stock: 11,
+      image: "https://picsum.photos/seed/pcplug-monitor-ultrawide/500/400",
       description:
-        "Space-saving right-angle connector, reinforced stress points, 1 meter length.",
+        "34-inch curved ultrawide QHD display for immersive gaming and productivity multitasking.",
     },
     {
       id: "p9",
-      name: "Extension Cord Reel (10m)",
-      price: 27.5,
-      category: "Power Strips",
-      stock: 9,
-      image: "https://picsum.photos/seed/plug-reel/500/400",
+      name: "Mechanical RGB Gaming Keyboard",
+      price: 89.99,
+      category: "Keyboards",
+      stock: 40,
+      image: "https://picsum.photos/seed/pcplug-keyboard-mech/500/400",
       description:
-        "Retractable 10 meter extension cord reel with 3 grounded outlets and thermal cut-off protection.",
+        "Hot-swappable mechanical switches, per-key RGB lighting, aluminum frame, USB-C detachable cable.",
     },
     {
       id: "p10",
-      name: "Smart Plug Mini (2-Pack)",
-      price: 22.99,
-      category: "Smart Plugs",
-      stock: 26,
-      image: "https://picsum.photos/seed/plug-mini/500/400",
+      name: "Wireless Compact Keyboard",
+      price: 59.99,
+      category: "Keyboards",
+      stock: 36,
+      image: "https://picsum.photos/seed/pcplug-keyboard-wireless/500/400",
       description:
-        "Compact smart plugs that fit tight outlet spaces without blocking the adjacent socket. Pack of 2.",
+        "75% compact layout, quiet low-profile keys, multi-device Bluetooth pairing, long battery life.",
+    },
+    {
+      id: "p11",
+      name: "Steam Gift Card ($50)",
+      price: 50.0,
+      category: "Gift Cards",
+      stock: 100,
+      image: "https://picsum.photos/seed/pcplug-giftcard-steam/500/400",
+      description:
+        "Digital $50 Steam Wallet gift card — instant code delivery for games, DLC and in-game items.",
+    },
+    {
+      id: "p12",
+      name: "PlayStation Store Gift Card ($25)",
+      price: 25.0,
+      category: "Gift Cards",
+      stock: 100,
+      image: "https://picsum.photos/seed/pcplug-giftcard-psn/500/400",
+      description:
+        "Digital $25 PlayStation Store credit — instant code delivery for games, add-ons and subscriptions.",
     },
   ];
 }
@@ -228,12 +258,42 @@ function initHomePage() {
   const searchInput = document.getElementById("searchInput");
   const categorySelect = document.getElementById("categorySelect");
   const countLabel = document.getElementById("resultsCount");
+  const categoryStripGrid = document.getElementById("categoryStripGrid");
   if (!grid) return;
 
   const categories = getCategories();
   categorySelect.innerHTML =
     `<option value="">All Categories</option>` +
     categories.map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
+
+  if (categoryStripGrid) {
+    categoryStripGrid.innerHTML = categories
+      .map(
+        (c) => `
+        <button type="button" class="category-chip" data-category="${escapeHtml(c)}">
+          <span class="icon">${CATEGORY_ICONS[c] || "🔌"}</span>
+          <span>${escapeHtml(c)}</span>
+        </button>
+      `
+      )
+      .join("");
+
+    categoryStripGrid.addEventListener("click", (e) => {
+      const chip = e.target.closest(".category-chip");
+      if (!chip) return;
+      const category = chip.dataset.category;
+      categorySelect.value = categorySelect.value === category ? "" : category;
+      categorySelect.dispatchEvent(new Event("change"));
+      grid.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }
+
+  function syncCategoryChips() {
+    if (!categoryStripGrid) return;
+    categoryStripGrid.querySelectorAll(".category-chip").forEach((chip) => {
+      chip.classList.toggle("active", chip.dataset.category === categorySelect.value);
+    });
+  }
 
   function applyFilters() {
     const query = searchInput.value.trim().toLowerCase();
@@ -254,6 +314,7 @@ function initHomePage() {
 
     renderProductGrid(grid, products);
     countLabel.textContent = `${products.length} product${products.length === 1 ? "" : "s"}`;
+    syncCategoryChips();
   }
 
   searchInput.addEventListener("input", applyFilters);
