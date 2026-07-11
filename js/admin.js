@@ -237,7 +237,6 @@ function adminTableRowView(p) {
 }
 
 function adminTableRowEdit(p) {
-  const categories = getCategories();
   return `
     <tr data-id="${p.id}" class="editing-row">
       <td><img class="thumb-sm" src="${p.image}" alt="${escapeHtml(p.name)}" /></td>

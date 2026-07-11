@@ -17,6 +17,10 @@
       </a>
       <nav class="nav-links">
         <a href="index.html" class="active">Shop</a>
+        <div class="nav-dropdown" id="categoryMenu">
+          <button type="button" class="nav-dropdown-toggle">Categories ▾</button>
+          <div class="nav-dropdown-menu" id="categoryMenuList"></div>
+        </div>
         <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
         <a href="cart.html" class="cart-link">
           🛒 Cart <span class="cart-count" id="cartCount">0</span>
@@ -32,7 +36,6 @@
       <p>CPUs, GPUs, full prebuilt PCs, monitors, keyboards and gift cards — hand-picked gear, straight to your door.</p>
       <div class="hero-actions">
         <a href="#productGrid" class="btn btn-primary">Shop Now</a>
-        <a href="#categoryStrip" class="btn btn-outline">Browse Categories</a>
       </div>
       <div class="hero-badges">
         <span>🚚 Fast Delivery</span>
@@ -41,10 +44,6 @@
         <span>⭐ Trusted by Gamers</span>
       </div>
     </div>
-  </section>
-
-  <section class="category-strip" id="categoryStrip">
-    <div class="category-strip-grid" id="categoryStripGrid"></div>
   </section>
 
   <div class="filters">
@@ -67,6 +66,7 @@
       initHomePage();
       updateCartBadge();
       initThemeToggle();
+      initCategoryMenu();
     });
   </script>
 </body>

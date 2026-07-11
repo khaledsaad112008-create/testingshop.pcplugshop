@@ -2,142 +2,48 @@
    PLUG — Product data + localStorage logic
    ========================================================================== */
 
-const PRODUCTS_KEY = "pc_plug_products_v2";
+const PRODUCTS_KEY = "pc_plug_products_v3";
 
-/* ---------- Category icons (used across the site) ---------- */
-const CATEGORY_ICONS = {
-  CPUs: "🧠",
-  GPUs: "🎮",
-  "Full PCs": "🖥️",
-  Monitors: "🖥️",
-  Keyboards: "⌨️",
-  "Gift Cards": "🎁",
-};
+/* Canonical category list — the single source of truth for admin + storefront filters. */
+const CATEGORIES = [
+  "CPUs", "GPUs", "Motherboards", "RAM", "Storage", "Power Supplies",
+  "Cases", "Cooling", "Monitors", "Keyboards", "Mice", "Headsets",
+  "Full PCs", "Laptops", "Networking", "Gift Cards",
+];
 
-/* ---------- Seed data ---------- */
+/* [id, name, price, category, stock, imageSeed, description] */
+const SEED_PRODUCTS = [
+  ["p1", "AMD Ryzen 7 7800X3D", 379.99, "CPUs", 24, "cpu-amd", "8-core/16-thread gaming CPU with 3D V-Cache. Socket AM5."],
+  ["p2", "Intel Core i5-14600K", 319.99, "CPUs", 31, "cpu-intel", "14-core unlocked CPU, strong price-to-performance."],
+  ["p3", "NVIDIA GeForce RTX 4070 Super", 599.99, "GPUs", 14, "gpu-rtx", "12GB GDDR6X, ray tracing + DLSS 3 for 1440p/4K."],
+  ["p4", "AMD Radeon RX 7800 XT", 549.0, "GPUs", 0, "gpu-radeon", "16GB card built for 1440p ultra settings."],
+  ["p5", "ASUS ROG B650-A Motherboard", 219.99, "Motherboards", 20, "mobo-asus", "AM5 ATX board, PCIe 5.0, DDR5, WiFi 6E."],
+  ["p6", "MSI Z790 Gaming Motherboard", 249.99, "Motherboards", 15, "mobo-msi", "LGA1700 ATX board, PCIe 5.0, DDR5 support."],
+  ["p7", "Corsair Vengeance 32GB DDR5 6000MHz", 109.99, "RAM", 50, "ram-corsair", "32GB (2x16GB) DDR5 kit, low latency, RGB."],
+  ["p8", "Samsung 990 Pro 2TB NVMe SSD", 149.99, "Storage", 45, "storage-ssd", "PCIe 4.0 NVMe SSD, up to 7450MB/s read."],
+  ["p9", "Seagate Barracuda 4TB HDD", 79.99, "Storage", 33, "storage-hdd", "4TB 7200RPM desktop hard drive for bulk storage."],
+  ["p10", "Corsair RM850x 850W Gold PSU", 129.99, "Power Supplies", 22, "psu-corsair", "Fully modular 80+ Gold, quiet fan, 10-year warranty."],
+  ["p11", "NZXT H510 Flow Mid Tower Case", 89.99, "Cases", 18, "case-nzxt", "Mesh front panel mid tower, tempered glass side."],
+  ["p12", "Corsair iCUE H100i 240mm AIO Cooler", 129.99, "Cooling", 16, "cooling-aio", "240mm liquid CPU cooler, RGB pump head."],
+  ["p13", '27" 165Hz QHD Gaming Monitor', 279.99, "Monitors", 19, "monitor-165hz", "27-inch QHD IPS, 165Hz, 1ms, FreeSync/G-Sync."],
+  ["p14", '34" Ultrawide Curved Monitor', 449.99, "Monitors", 11, "monitor-ultrawide", "34-inch curved ultrawide QHD display."],
+  ["p15", "Mechanical RGB Gaming Keyboard", 89.99, "Keyboards", 40, "keyboard-mech", "Hot-swappable switches, per-key RGB, aluminum frame."],
+  ["p16", "Wireless Compact Keyboard", 59.99, "Keyboards", 36, "keyboard-wireless", "75% layout, quiet keys, multi-device Bluetooth."],
+  ["p17", "Wireless Gaming Mouse", 49.99, "Mice", 42, "mouse-wireless", "26000 DPI sensor, ultra-light, 70hr battery."],
+  ["p18", "7.1 Surround Gaming Headset", 69.99, "Headsets", 28, "headset-71", "Virtual 7.1 surround, noise-cancelling mic."],
+  ["p19", "PC PLUG Starter Gaming PC", 999.0, "Full PCs", 8, "fullpc-starter", "Ryzen 5 + RTX 4060 prebuilt, 16GB RAM, 1TB NVMe SSD."],
+  ["p20", "PC PLUG Elite Gaming PC", 1899.0, "Full PCs", 5, "fullpc-elite", "Ryzen 7 + RTX 4070 Super, 32GB RAM, 2TB NVMe, AIO cooling."],
+  ["p21", 'PC PLUG 15" Gaming Laptop', 1299.0, "Laptops", 7, "laptop-gaming", "RTX 4060 laptop, 16GB RAM, 512GB SSD, 165Hz display."],
+  ["p22", "WiFi 6E Mesh Router", 179.99, "Networking", 25, "networking-router", "Tri-band mesh router, covers up to 3000 sq ft."],
+  ["p23", "Steam Gift Card ($50)", 50.0, "Gift Cards", 100, "giftcard-steam", "Digital $50 Steam Wallet code, instant delivery."],
+  ["p24", "PlayStation Store Gift Card ($25)", 25.0, "Gift Cards", 100, "giftcard-psn", "Digital $25 PSN credit, instant code delivery."],
+];
+
 function defaultProducts() {
-  return [
-    {
-      id: "p1",
-      name: "AMD Ryzen 7 7800X3D",
-      price: 379.99,
-      category: "CPUs",
-      stock: 24,
-      image: "https://picsum.photos/seed/pcplug-cpu-amd/500/400",
-      description:
-        "8-core / 16-thread gaming CPU with 3D V-Cache for class-leading frame rates. Socket AM5.",
-    },
-    {
-      id: "p2",
-      name: "Intel Core i5-14600K",
-      price: 319.99,
-      category: "CPUs",
-      stock: 31,
-      image: "https://picsum.photos/seed/pcplug-cpu-intel/500/400",
-      description:
-        "14-core unlocked desktop processor, great price-to-performance for gaming and multitasking.",
-    },
-    {
-      id: "p3",
-      name: "NVIDIA GeForce RTX 4070 Super",
-      price: 599.99,
-      category: "GPUs",
-      stock: 14,
-      image: "https://picsum.photos/seed/pcplug-gpu-rtx/500/400",
-      description:
-        "12GB GDDR6X graphics card with ray tracing and DLSS 3 — smooth 1440p and entry 4K gaming.",
-    },
-    {
-      id: "p4",
-      name: "AMD Radeon RX 7800 XT",
-      price: 549.0,
-      category: "GPUs",
-      stock: 0,
-      image: "https://picsum.photos/seed/pcplug-gpu-radeon/500/400",
-      description:
-        "16GB high-performance card built for 1440p ultra settings and high refresh rate gaming.",
-    },
-    {
-      id: "p5",
-      name: "PC PLUG Starter Gaming PC",
-      price: 999.0,
-      category: "Full PCs",
-      stock: 8,
-      image: "https://picsum.photos/seed/pcplug-fullpc-starter/500/400",
-      description:
-        "Ryzen 5 + RTX 4060 prebuilt, 16GB RAM, 1TB NVMe SSD. Ready to play out of the box.",
-    },
-    {
-      id: "p6",
-      name: "PC PLUG Elite Gaming PC",
-      price: 1899.0,
-      category: "Full PCs",
-      stock: 5,
-      image: "https://picsum.photos/seed/pcplug-fullpc-elite/500/400",
-      description:
-        "Ryzen 7 + RTX 4070 Super prebuilt, 32GB RAM, 2TB NVMe SSD, liquid cooling, RGB build.",
-    },
-    {
-      id: "p7",
-      name: '27" 165Hz QHD Gaming Monitor',
-      price: 279.99,
-      category: "Monitors",
-      stock: 19,
-      image: "https://picsum.photos/seed/pcplug-monitor-165hz/500/400",
-      description:
-        "27-inch QHD IPS panel, 165Hz refresh rate, 1ms response time, FreeSync / G-Sync compatible.",
-    },
-    {
-      id: "p8",
-      name: '34" Ultrawide Curved Monitor',
-      price: 449.99,
-      category: "Monitors",
-      stock: 11,
-      image: "https://picsum.photos/seed/pcplug-monitor-ultrawide/500/400",
-      description:
-        "34-inch curved ultrawide QHD display for immersive gaming and productivity multitasking.",
-    },
-    {
-      id: "p9",
-      name: "Mechanical RGB Gaming Keyboard",
-      price: 89.99,
-      category: "Keyboards",
-      stock: 40,
-      image: "https://picsum.photos/seed/pcplug-keyboard-mech/500/400",
-      description:
-        "Hot-swappable mechanical switches, per-key RGB lighting, aluminum frame, USB-C detachable cable.",
-    },
-    {
-      id: "p10",
-      name: "Wireless Compact Keyboard",
-      price: 59.99,
-      category: "Keyboards",
-      stock: 36,
-      image: "https://picsum.photos/seed/pcplug-keyboard-wireless/500/400",
-      description:
-        "75% compact layout, quiet low-profile keys, multi-device Bluetooth pairing, long battery life.",
-    },
-    {
-      id: "p11",
-      name: "Steam Gift Card ($50)",
-      price: 50.0,
-      category: "Gift Cards",
-      stock: 100,
-      image: "https://picsum.photos/seed/pcplug-giftcard-steam/500/400",
-      description:
-        "Digital $50 Steam Wallet gift card — instant code delivery for games, DLC and in-game items.",
-    },
-    {
-      id: "p12",
-      name: "PlayStation Store Gift Card ($25)",
-      price: 25.0,
-      category: "Gift Cards",
-      stock: 100,
-      image: "https://picsum.photos/seed/pcplug-giftcard-psn/500/400",
-      description:
-        "Digital $25 PlayStation Store credit — instant code delivery for games, add-ons and subscriptions.",
-    },
-  ];
+  return SEED_PRODUCTS.map(([id, name, price, category, stock, imageSeed, description]) => ({
+    id, name, price, category, stock, description,
+    image: `https://picsum.photos/seed/pcplug-${imageSeed}/500/400`,
+  }));
 }
 
 function seedIfEmpty() {
@@ -200,8 +106,7 @@ function deleteProduct(id) {
 }
 
 function getCategories() {
-  const products = getProducts();
-  return [...new Set(products.map((p) => p.category))].sort();
+  return CATEGORIES;
 }
 
 /* ---------- Helpers ---------- */
@@ -258,7 +163,6 @@ function initHomePage() {
   const searchInput = document.getElementById("searchInput");
   const categorySelect = document.getElementById("categorySelect");
   const countLabel = document.getElementById("resultsCount");
-  const categoryStripGrid = document.getElementById("categoryStripGrid");
   if (!grid) return;
 
   const categories = getCategories();
@@ -266,33 +170,9 @@ function initHomePage() {
     `<option value="">All Categories</option>` +
     categories.map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join("");
 
-  if (categoryStripGrid) {
-    categoryStripGrid.innerHTML = categories
-      .map(
-        (c) => `
-        <button type="button" class="category-chip" data-category="${escapeHtml(c)}">
-          <span class="icon">${CATEGORY_ICONS[c] || "🔌"}</span>
-          <span>${escapeHtml(c)}</span>
-        </button>
-      `
-      )
-      .join("");
-
-    categoryStripGrid.addEventListener("click", (e) => {
-      const chip = e.target.closest(".category-chip");
-      if (!chip) return;
-      const category = chip.dataset.category;
-      categorySelect.value = categorySelect.value === category ? "" : category;
-      categorySelect.dispatchEvent(new Event("change"));
-      grid.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  }
-
-  function syncCategoryChips() {
-    if (!categoryStripGrid) return;
-    categoryStripGrid.querySelectorAll(".category-chip").forEach((chip) => {
-      chip.classList.toggle("active", chip.dataset.category === categorySelect.value);
-    });
+  const requestedCategory = new URLSearchParams(window.location.search).get("category");
+  if (requestedCategory && categories.includes(requestedCategory)) {
+    categorySelect.value = requestedCategory;
   }
 
   function applyFilters() {
@@ -314,7 +194,6 @@ function initHomePage() {
 
     renderProductGrid(grid, products);
     countLabel.textContent = `${products.length} product${products.length === 1 ? "" : "s"}`;
-    syncCategoryChips();
   }
 
   searchInput.addEventListener("input", applyFilters);
@@ -329,6 +208,24 @@ function initHomePage() {
   });
 
   applyFilters();
+}
+
+/* ---------- Header category dropdown (all pages) ---------- */
+function initCategoryMenu() {
+  const menu = document.getElementById("categoryMenu");
+  const list = document.getElementById("categoryMenuList");
+  if (!menu || !list) return;
+
+  const base = window.location.pathname.includes("/admin/") ? "../index.html" : "index.html";
+  list.innerHTML = getCategories()
+    .map((c) => `<a href="${base}?category=${encodeURIComponent(c)}">${escapeHtml(c)}</a>`)
+    .join("");
+
+  const toggle = menu.querySelector(".nav-dropdown-toggle");
+  toggle.addEventListener("click", () => menu.classList.toggle("open"));
+  document.addEventListener("click", (e) => {
+    if (!menu.contains(e.target)) menu.classList.remove("open");
+  });
 }
 
 /* ---------- Product detail page ---------- */

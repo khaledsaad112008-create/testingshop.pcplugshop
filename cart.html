@@ -17,6 +17,10 @@
       </a>
       <nav class="nav-links">
         <a href="index.html">Shop</a>
+        <div class="nav-dropdown" id="categoryMenu">
+          <button type="button" class="nav-dropdown-toggle">Categories ▾</button>
+          <div class="nav-dropdown-menu" id="categoryMenuList"></div>
+        </div>
         <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
         <a href="cart.html" class="cart-link active">
           🛒 Cart <span class="cart-count" id="cartCount">0</span>
@@ -43,6 +47,7 @@
       initCartPage();
       updateCartBadge();
       initThemeToggle();
+      initCategoryMenu();
     });
   </script>
 </body>
