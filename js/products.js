@@ -11,51 +11,24 @@ const CATEGORIES = [
   "Full PCs", "Laptops", "Networking", "Gift Cards",
 ];
 
-/* [id, name, price, category, stock, imageSeed, description] */
-const SEED_PRODUCTS = [
-  ["p1", "AMD Ryzen 7 7800X3D", 379.99, "CPUs", 24, "cpu-amd", "8-core/16-thread gaming CPU with 3D V-Cache. Socket AM5."],
-  ["p2", "Intel Core i5-14600K", 319.99, "CPUs", 31, "cpu-intel", "14-core unlocked CPU, strong price-to-performance."],
-  ["p3", "NVIDIA GeForce RTX 4070 Super", 599.99, "GPUs", 14, "gpu-rtx", "12GB GDDR6X, ray tracing + DLSS 3 for 1440p/4K."],
-  ["p4", "AMD Radeon RX 7800 XT", 549.0, "GPUs", 0, "gpu-radeon", "16GB card built for 1440p ultra settings."],
-  ["p5", "ASUS ROG B650-A Motherboard", 219.99, "Motherboards", 20, "mobo-asus", "AM5 ATX board, PCIe 5.0, DDR5, WiFi 6E."],
-  ["p6", "MSI Z790 Gaming Motherboard", 249.99, "Motherboards", 15, "mobo-msi", "LGA1700 ATX board, PCIe 5.0, DDR5 support."],
-  ["p7", "Corsair Vengeance 32GB DDR5 6000MHz", 109.99, "RAM", 50, "ram-corsair", "32GB (2x16GB) DDR5 kit, low latency, RGB."],
-  ["p8", "Samsung 990 Pro 2TB NVMe SSD", 149.99, "Storage", 45, "storage-ssd", "PCIe 4.0 NVMe SSD, up to 7450MB/s read."],
-  ["p9", "Seagate Barracuda 4TB HDD", 79.99, "Storage", 33, "storage-hdd", "4TB 7200RPM desktop hard drive for bulk storage."],
-  ["p10", "Corsair RM850x 850W Gold PSU", 129.99, "Power Supplies", 22, "psu-corsair", "Fully modular 80+ Gold, quiet fan, 10-year warranty."],
-  ["p11", "NZXT H510 Flow Mid Tower Case", 89.99, "Cases", 18, "case-nzxt", "Mesh front panel mid tower, tempered glass side."],
-  ["p12", "Corsair iCUE H100i 240mm AIO Cooler", 129.99, "Cooling", 16, "cooling-aio", "240mm liquid CPU cooler, RGB pump head."],
-  ["p13", '27" 165Hz QHD Gaming Monitor', 279.99, "Monitors", 19, "monitor-165hz", "27-inch QHD IPS, 165Hz, 1ms, FreeSync/G-Sync."],
-  ["p14", '34" Ultrawide Curved Monitor', 449.99, "Monitors", 11, "monitor-ultrawide", "34-inch curved ultrawide QHD display."],
-  ["p15", "Mechanical RGB Gaming Keyboard", 89.99, "Keyboards", 40, "keyboard-mech", "Hot-swappable switches, per-key RGB, aluminum frame."],
-  ["p16", "Wireless Compact Keyboard", 59.99, "Keyboards", 36, "keyboard-wireless", "75% layout, quiet keys, multi-device Bluetooth."],
-  ["p17", "Wireless Gaming Mouse", 49.99, "Mice", 42, "mouse-wireless", "26000 DPI sensor, ultra-light, 70hr battery."],
-  ["p18", "7.1 Surround Gaming Headset", 69.99, "Headsets", 28, "headset-71", "Virtual 7.1 surround, noise-cancelling mic."],
-  ["p19", "PC PLUG Starter Gaming PC", 999.0, "Full PCs", 8, "fullpc-starter", "Ryzen 5 + RTX 4060 prebuilt, 16GB RAM, 1TB NVMe SSD."],
-  ["p20", "PC PLUG Elite Gaming PC", 1899.0, "Full PCs", 5, "fullpc-elite", "Ryzen 7 + RTX 4070 Super, 32GB RAM, 2TB NVMe, AIO cooling."],
-  ["p21", 'PC PLUG 15" Gaming Laptop', 1299.0, "Laptops", 7, "laptop-gaming", "RTX 4060 laptop, 16GB RAM, 512GB SSD, 165Hz display."],
-  ["p22", "WiFi 6E Mesh Router", 179.99, "Networking", 25, "networking-router", "Tri-band mesh router, covers up to 3000 sq ft."],
-  ["p23", "Steam Gift Card ($50)", 50.0, "Gift Cards", 100, "giftcard-steam", "Digital $50 Steam Wallet code, instant delivery."],
-  ["p24", "PlayStation Store Gift Card ($25)", 25.0, "Gift Cards", 100, "giftcard-psn", "Digital $25 PSN credit, instant code delivery."],
-];
-
-function defaultProducts() {
-  return SEED_PRODUCTS.map(([id, name, price, category, stock, imageSeed, description]) => ({
-    id, name, price, category, stock, description,
-    image: `https://picsum.photos/seed/pcplug-${imageSeed}/500/400`,
-  }));
+/* The product catalog lives in data/products.json (the "database"), not in this file. */
+function dataFilePath(name) {
+  return window.location.pathname.includes("/admin/") ? `../data/${name}` : `data/${name}`;
 }
 
-function seedIfEmpty() {
-  const existing = localStorage.getItem(PRODUCTS_KEY);
-  if (!existing) {
-    localStorage.setItem(PRODUCTS_KEY, JSON.stringify(defaultProducts()));
+async function seedIfEmpty() {
+  if (localStorage.getItem(PRODUCTS_KEY)) return;
+  try {
+    const res = await fetch(dataFilePath("products.json"));
+    const data = await res.json();
+    localStorage.setItem(PRODUCTS_KEY, JSON.stringify(data));
+  } catch (e) {
+    localStorage.setItem(PRODUCTS_KEY, JSON.stringify([]));
   }
 }
 
 /* ---------- CRUD ---------- */
 function getProducts() {
-  seedIfEmpty();
   try {
     return JSON.parse(localStorage.getItem(PRODUCTS_KEY)) || [];
   } catch (e) {

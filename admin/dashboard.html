@@ -90,7 +90,12 @@
     <section class="panel">
       <div class="panel-header-row">
         <h2>All Products</h2>
+        <button class="btn btn-outline" id="exportDbBtn">⬇ Export Database</button>
       </div>
+      <p class="page-sub" style="margin:-10px 0 18px;font-size:0.85rem;">
+        Your edits only apply to this browser until <code>data/products.json</code> is updated in the site's
+        source. Export it here whenever you want your changes to go live for every visitor.
+      </p>
       <div class="table-wrap">
         <table class="admin-table">
           <thead>
@@ -109,12 +114,13 @@
     </section>
   </main>
 
-  <script src="../js/products.js?v=2"></script>
+  <script src="../js/products.js?v=3"></script>
   <script src="../js/cart.js?v=2"></script>
-  <script src="../js/admin.js?v=2"></script>
+  <script src="../js/admin.js?v=3"></script>
   <script src="../js/theme.js?v=2"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", async () => {
+      await seedIfEmpty();
       const categoryList = document.getElementById("categoryList");
       categoryList.innerHTML = getCategories()
         .map((c) => `<option value="${c}"></option>`)

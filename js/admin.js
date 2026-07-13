@@ -321,6 +321,17 @@ function initAdminTable() {
   });
 }
 
+/* ---------- Export database ---------- */
+function exportProductsDatabase() {
+  const blob = new Blob([JSON.stringify(getProducts(), null, 2)], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "products.json";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 /* ---------- Dashboard init ---------- */
 function initDashboardPage() {
   requireAdminAuth();
@@ -331,4 +342,7 @@ function initDashboardPage() {
 
   const logoutBtn = document.getElementById("logoutBtn");
   if (logoutBtn) logoutBtn.addEventListener("click", (e) => { e.preventDefault(); adminLogout(); });
+
+  const exportBtn = document.getElementById("exportDbBtn");
+  if (exportBtn) exportBtn.addEventListener("click", exportProductsDatabase);
 }

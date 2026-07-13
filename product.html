@@ -39,11 +39,12 @@
     &copy; 2026 PC PLUG. All rights reserved.
   </footer>
 
-  <script src="js/products.js?v=2"></script>
+  <script src="js/products.js?v=3"></script>
   <script src="js/cart.js?v=2"></script>
   <script src="js/theme.js?v=2"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", async () => {
+      await seedIfEmpty();
       initProductDetailPage();
       updateCartBadge();
       initThemeToggle();
