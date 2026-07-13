@@ -120,10 +120,23 @@ function escapeHtml(str) {
 }
 
 /* ---------- Rendering: product card ---------- */
-function productCardHtml(p) {
+function buildInquiryUrl(product) {
+  const link = new URL(`product.html?id=${encodeURIComponent(product.id)}`, window.location.href).href;
+  const message = `Hi! Is this product available? ${product.name}\n${link}`;
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
+function stockActionHtml(p) {
+  if (p.stock > 0) {
+    return `<button class="btn btn-primary btn-block add-to-cart-btn" data-id="${p.id}">Add to Cart</button>`;
+  }
+  return `<a class="btn btn-outline btn-block" href="${buildInquiryUrl(p)}" target="_blank" rel="noopener">💬 Inquire on WhatsApp</a>`;
+}
+
+function productCardHtml(p, index) {
   const status = stockStatus(p.stock);
   return `
-    <div class="product-card" data-id="${p.id}">
+    <div class="product-card" data-id="${p.id}" style="--card-i:${index}">
       <a href="product.html?id=${encodeURIComponent(p.id)}" class="thumb">
         <img src="${p.image}" alt="${escapeHtml(p.name)}" loading="lazy" />
       </a>
@@ -133,9 +146,7 @@ function productCardHtml(p) {
         <span class="stock-tag ${status.cls}">${status.label}</span>
         <span class="price">${formatPrice(p.price)}</span>
         <div class="actions">
-          <button class="btn btn-primary btn-block add-to-cart-btn" data-id="${p.id}" ${p.stock <= 0 ? "disabled" : ""}>
-            ${p.stock <= 0 ? "Out of stock" : "Add to Cart"}
-          </button>
+          ${stockActionHtml(p)}
         </div>
       </div>
     </div>
@@ -147,7 +158,7 @@ function renderProductGrid(container, products) {
     container.innerHTML = `<div class="empty-state">No products found. Try a different search or category.</div>`;
     return;
   }
-  container.innerHTML = products.map(productCardHtml).join("");
+  container.innerHTML = products.map((p, i) => productCardHtml(p, i)).join("");
 }
 
 /* ---------- Homepage ---------- */
@@ -249,25 +260,31 @@ function initProductDetailPage() {
       <p class="description">${escapeHtml(product.description)}</p>
       <span class="stock-tag ${status.cls}">${status.label}</span>
       <div class="qty-row">
-        <div class="qty-control">
-          <button type="button" id="qtyMinus">−</button>
-          <input type="number" id="qtyInput" value="1" min="1" max="${Math.max(product.stock, 1)}" />
-          <button type="button" id="qtyPlus">+</button>
-        </div>
-        <button class="btn btn-primary" id="addToCartBtn" ${product.stock <= 0 ? "disabled" : ""}>
-          ${product.stock <= 0 ? "Out of stock" : "Add to Cart"}
-        </button>
+        ${
+          product.stock > 0
+            ? `
+          <div class="qty-control">
+            <button type="button" id="qtyMinus">−</button>
+            <input type="number" id="qtyInput" value="1" min="1" max="${product.stock}" />
+            <button type="button" id="qtyPlus">+</button>
+          </div>
+          <button class="btn btn-primary" id="addToCartBtn">Add to Cart</button>
+        `
+            : `<a class="btn btn-outline" href="${buildInquiryUrl(product)}" target="_blank" rel="noopener">💬 Inquire on WhatsApp</a>`
+        }
       </div>
     </div>
   `;
 
   const qtyInput = document.getElementById("qtyInput");
-  document.getElementById("qtyMinus").addEventListener("click", () => {
-    qtyInput.value = Math.max(1, Number(qtyInput.value) - 1);
-  });
-  document.getElementById("qtyPlus").addEventListener("click", () => {
-    qtyInput.value = Math.min(Number(qtyInput.max) || 99, Number(qtyInput.value) + 1);
-  });
+  if (qtyInput) {
+    document.getElementById("qtyMinus").addEventListener("click", () => {
+      qtyInput.value = Math.max(1, Number(qtyInput.value) - 1);
+    });
+    document.getElementById("qtyPlus").addEventListener("click", () => {
+      qtyInput.value = Math.min(Number(qtyInput.max) || 99, Number(qtyInput.value) + 1);
+    });
+  }
 
   const addBtn = document.getElementById("addToCartBtn");
   if (addBtn) {

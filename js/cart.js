@@ -68,7 +68,15 @@ function getCartTotal() {
 /* ---------- Navbar badge ---------- */
 function updateCartBadge() {
   const badge = document.getElementById("cartCount");
-  if (badge) badge.textContent = getCartCount();
+  if (!badge) return;
+  const newCount = String(getCartCount());
+  const changed = badge.textContent !== newCount;
+  badge.textContent = newCount;
+  if (changed) {
+    badge.classList.remove("bump");
+    void badge.offsetWidth;
+    badge.classList.add("bump");
+  }
 }
 
 /* ---------- Cart page rendering ---------- */
