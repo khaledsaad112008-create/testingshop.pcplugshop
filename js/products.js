@@ -4,6 +4,7 @@
 
 const PRODUCTS_KEY = "pc_plug_products_v3";
 const PRODUCTS_DIRTY_KEY = "pc_plug_products_dirty";
+const PRODUCTS_LAST_SYNC_KEY = "pc_plug_last_sync";
 
 /* Canonical category list — the single source of truth for admin + storefront filters. */
 const CATEGORIES = [
@@ -37,12 +38,29 @@ async function discardDraftAndReload() {
    get silently overwritten before it's exported. */
 async function loadProducts() {
   if (isDraftDirty() && localStorage.getItem(PRODUCTS_KEY)) return;
+  const path = dataFilePath("products.json");
   try {
-    const res = await fetch(dataFilePath("products.json"), { cache: "no-store" });
+    const res = await fetch(path, { cache: "no-store" });
     const data = await res.json();
     localStorage.setItem(PRODUCTS_KEY, JSON.stringify(data));
+    localStorage.setItem(PRODUCTS_LAST_SYNC_KEY, JSON.stringify({
+      count: data.length,
+      url: new URL(path, window.location.href).href,
+      time: Date.now(),
+    }));
   } catch (e) {
     if (!localStorage.getItem(PRODUCTS_KEY)) localStorage.setItem(PRODUCTS_KEY, JSON.stringify([]));
+  }
+}
+
+/* Info about the last successful fetch from the published database file —
+   used by the admin dashboard to show what it actually loaded, so a stale
+   reload (e.g. live site not yet re-deployed) is obvious instead of confusing. */
+function getLastSyncInfo() {
+  try {
+    return JSON.parse(localStorage.getItem(PRODUCTS_LAST_SYNC_KEY));
+  } catch (e) {
+    return null;
   }
 }
 

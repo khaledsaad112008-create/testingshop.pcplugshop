@@ -332,6 +332,22 @@ function exportProductsDatabase() {
   URL.revokeObjectURL(url);
 }
 
+/* Shows exactly what the last fetch from data/products.json returned (source
+   URL, product count, time) so a stale reload is visible immediately instead
+   of looking like nothing happened. */
+function renderDbSyncStatus() {
+  const el = document.getElementById("dbSyncStatus");
+  if (!el) return;
+  const info = getLastSyncInfo();
+  if (!info) {
+    el.textContent = "";
+    return;
+  }
+  const time = new Date(info.time).toLocaleTimeString();
+  el.innerHTML = `Last synced from <code>${info.url}</code> at ${time} — ${info.count} products. ` +
+    `Fetching from this host: if this is the live site, it only reflects what's been pushed to <code>main</code>, not files replaced on your local disk.`;
+}
+
 /* ---------- Dashboard init ---------- */
 function initDashboardPage() {
   requireAdminAuth();
@@ -339,6 +355,7 @@ function initDashboardPage() {
   initAddProductForm();
   renderAdminTable();
   initAdminTable();
+  renderDbSyncStatus();
 
   const logoutBtn = document.getElementById("logoutBtn");
   if (logoutBtn) logoutBtn.addEventListener("click", (e) => { e.preventDefault(); adminLogout(); });
@@ -353,6 +370,11 @@ function initDashboardPage() {
       await discardDraftAndReload();
       renderAdminStats();
       renderAdminTable();
+      renderDbSyncStatus();
+      const info = getLastSyncInfo();
+      if (info) {
+        alert(`Reloaded ${info.count} products from:\n${info.url}\n\nIf this still looks like your old data, your edit hasn't been pushed to main yet — replacing the local file isn't enough on the live site.`);
+      }
     });
   }
 }

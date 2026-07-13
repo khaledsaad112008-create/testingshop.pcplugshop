@@ -1,226 +1,10 @@
 [
   {
-    "id": "p1",
-    "name": "AMD Ryzen 7 7800X3D",
-    "price": 379.99,
-    "category": "CPUs",
-    "stock": 130,
-    "description": "8-core/16-thread gaming CPU with 3D V-Cache. Socket AM5.",
-    "image": "https://picsum.photos/seed/pcplug-cpu-amd/500/400"
-  },
-  {
-    "id": "p2",
-    "name": "Intel Core i5-14600K",
-    "price": 319.99,
-    "category": "CPUs",
-    "stock": 31,
-    "description": "14-core unlocked CPU, strong price-to-performance.",
-    "image": "https://picsum.photos/seed/pcplug-cpu-intel/500/400"
-  },
-  {
-    "id": "p3",
-    "name": "NVIDIA GeForce RTX 4070 Super",
-    "price": 599.99,
-    "category": "GPUs",
-    "stock": 14,
-    "description": "12GB GDDR6X, ray tracing + DLSS 3 for 1440p/4K.",
-    "image": "https://picsum.photos/seed/pcplug-gpu-rtx/500/400"
-  },
-  {
-    "id": "p4",
-    "name": "AMD Radeon RX 7800 XT",
-    "price": 549,
-    "category": "GPUs",
-    "stock": 0,
-    "description": "16GB card built for 1440p ultra settings.",
-    "image": "https://picsum.photos/seed/pcplug-gpu-radeon/500/400"
-  },
-  {
-    "id": "p5",
-    "name": "ASUS ROG B650-A Motherboard",
-    "price": 219.99,
-    "category": "Motherboards",
-    "stock": 20,
-    "description": "AM5 ATX board, PCIe 5.0, DDR5, WiFi 6E.",
-    "image": "https://picsum.photos/seed/pcplug-mobo-asus/500/400"
-  },
-  {
-    "id": "p6",
-    "name": "MSI Z790 Gaming Motherboard",
-    "price": 249.99,
-    "category": "Motherboards",
-    "stock": 15,
-    "description": "LGA1700 ATX board, PCIe 5.0, DDR5 support.",
-    "image": "https://picsum.photos/seed/pcplug-mobo-msi/500/400"
-  },
-  {
-    "id": "p7",
-    "name": "Corsair Vengeance 32GB DDR5 6000MHz",
-    "price": 109.99,
-    "category": "RAM",
-    "stock": 50,
-    "description": "32GB (2x16GB) DDR5 kit, low latency, RGB.",
-    "image": "https://picsum.photos/seed/pcplug-ram-corsair/500/400"
-  },
-  {
-    "id": "p8",
-    "name": "Samsung 990 Pro 2TB NVMe SSD",
-    "price": 149.99,
-    "category": "Storage",
-    "stock": 45,
-    "description": "PCIe 4.0 NVMe SSD, up to 7450MB/s read.",
-    "image": "https://picsum.photos/seed/pcplug-storage-ssd/500/400"
-  },
-  {
-    "id": "p9",
-    "name": "Seagate Barracuda 4TB HDD",
-    "price": 79.99,
-    "category": "Storage",
-    "stock": 33,
-    "description": "4TB 7200RPM desktop hard drive for bulk storage.",
-    "image": "https://picsum.photos/seed/pcplug-storage-hdd/500/400"
-  },
-  {
-    "id": "p10",
-    "name": "Corsair RM850x 850W Gold PSU",
-    "price": 129.99,
-    "category": "Power Supplies",
-    "stock": 22,
-    "description": "Fully modular 80+ Gold, quiet fan, 10-year warranty.",
-    "image": "https://picsum.photos/seed/pcplug-psu-corsair/500/400"
-  },
-  {
-    "id": "p11",
-    "name": "NZXT H510 Flow Mid Tower Case",
-    "price": 89.99,
-    "category": "Cases",
-    "stock": 18,
-    "description": "Mesh front panel mid tower, tempered glass side.",
-    "image": "https://picsum.photos/seed/pcplug-case-nzxt/500/400"
-  },
-  {
-    "id": "p12",
-    "name": "Corsair iCUE H100i 240mm AIO Cooler",
-    "price": 129.99,
-    "category": "Cooling",
-    "stock": 16,
-    "description": "240mm liquid CPU cooler, RGB pump head.",
-    "image": "https://picsum.photos/seed/pcplug-cooling-aio/500/400"
-  },
-  {
-    "id": "p13",
-    "name": "27\" 165Hz QHD Gaming Monitor",
-    "price": 279.99,
-    "category": "Monitors",
-    "stock": 19,
-    "description": "27-inch QHD IPS, 165Hz, 1ms, FreeSync/G-Sync.",
-    "image": "https://picsum.photos/seed/pcplug-monitor-165hz/500/400"
-  },
-  {
-    "id": "p14",
-    "name": "34\" Ultrawide Curved Monitor",
-    "price": 449.99,
-    "category": "Monitors",
-    "stock": 11,
-    "description": "34-inch curved ultrawide QHD display.",
-    "image": "https://picsum.photos/seed/pcplug-monitor-ultrawide/500/400"
-  },
-  {
-    "id": "p15",
-    "name": "Mechanical RGB Gaming Keyboard",
-    "price": 89.99,
-    "category": "Keyboards",
-    "stock": 40,
-    "description": "Hot-swappable switches, per-key RGB, aluminum frame.",
-    "image": "https://picsum.photos/seed/pcplug-keyboard-mech/500/400"
-  },
-  {
-    "id": "p16",
-    "name": "Wireless Compact Keyboard",
-    "price": 59.99,
-    "category": "Keyboards",
-    "stock": 36,
-    "description": "75% layout, quiet keys, multi-device Bluetooth.",
-    "image": "https://picsum.photos/seed/pcplug-keyboard-wireless/500/400"
-  },
-  {
-    "id": "p17",
-    "name": "Wireless Gaming Mouse",
-    "price": 49.99,
-    "category": "Mice",
-    "stock": 42,
-    "description": "26000 DPI sensor, ultra-light, 70hr battery.",
-    "image": "https://picsum.photos/seed/pcplug-mouse-wireless/500/400"
-  },
-  {
-    "id": "p18",
-    "name": "7.1 Surround Gaming Headset",
-    "price": 69.99,
-    "category": "Headsets",
-    "stock": 28,
-    "description": "Virtual 7.1 surround, noise-cancelling mic.",
-    "image": "https://picsum.photos/seed/pcplug-headset-71/500/400"
-  },
-  {
-    "id": "p19",
-    "name": "PC PLUG Starter Gaming PC",
-    "price": 999,
-    "category": "Full PCs",
-    "stock": 8,
-    "description": "Ryzen 5 + RTX 4060 prebuilt, 16GB RAM, 1TB NVMe SSD.",
-    "image": "https://picsum.photos/seed/pcplug-fullpc-starter/500/400"
-  },
-  {
-    "id": "p20",
-    "name": "PC PLUG Elite Gaming PC",
-    "price": 1899,
-    "category": "Full PCs",
-    "stock": 5,
-    "description": "Ryzen 7 + RTX 4070 Super, 32GB RAM, 2TB NVMe, AIO cooling.",
-    "image": "https://picsum.photos/seed/pcplug-fullpc-elite/500/400"
-  },
-  {
-    "id": "p21",
-    "name": "PC PLUG 15\" Gaming Laptop",
-    "price": 1299,
-    "category": "Laptops",
-    "stock": 7,
-    "description": "RTX 4060 laptop, 16GB RAM, 512GB SSD, 165Hz display.",
-    "image": "https://picsum.photos/seed/pcplug-laptop-gaming/500/400"
-  },
-  {
-    "id": "p22",
-    "name": "WiFi 6E Mesh Router",
-    "price": 179.99,
-    "category": "Networking",
-    "stock": 25,
-    "description": "Tri-band mesh router, covers up to 3000 sq ft.",
-    "image": "https://picsum.photos/seed/pcplug-networking-router/500/400"
-  },
-  {
-    "id": "p23",
-    "name": "Steam Gift Card ($50)",
-    "price": 50,
-    "category": "Gift Cards",
-    "stock": 100,
-    "description": "Digital $50 Steam Wallet code, instant delivery.",
-    "image": "https://picsum.photos/seed/pcplug-giftcard-steam/500/400"
-  },
-  {
-    "id": "p24",
-    "name": "PlayStation Store Gift Card ($25)",
-    "price": 25,
-    "category": "Gift Cards",
-    "stock": 100,
-    "description": "Digital $25 PSN credit, instant code delivery.",
-    "image": "https://picsum.photos/seed/pcplug-giftcard-psn/500/400"
-  },
-  {
     "id": "p25",
     "name": "PC PLUG RTX 5070 + i5 14400F Gaming PC",
     "price": 5600,
     "category": "Full PCs",
-    "stock": 5,
+    "stock": 6,
     "description": "High-end 1440p/4K gaming rig built around the 10-core Intel i5-14400F and a 12GB RTX 5070. Paired with 16GB DDR4 3200MHz RAM, a 1TB Netac NVMe SSD, B760 motherboard, AIGO ICE400 cooler, 650W 80+ PSU and a tempered-glass case with ARGB fans. Includes genuine Windows 11, 1-year warranty and free delivery.",
     "image": "/images/products/ig-rtx5070-i5-14400f.jpg"
   },
@@ -229,7 +13,7 @@
     "name": "PC PLUG RTX 5060 + i5 14400F Gaming PC",
     "price": 3999,
     "category": "Full PCs",
-    "stock": 5,
+    "stock": 7,
     "description": "Smooth 1080p/1440p gaming build pairing the Intel i5-14400F with an 8GB RTX 5060. Includes 16GB DDR4 3200MHz RAM, a 1TB Netac NVMe SSD, H610M motherboard, AIGO ICE400 cooler and a 650W 80+ PSU. Genuine Windows 11, 1-year warranty and free delivery included.",
     "image": "/images/products/ig-rtx5060-i5-14400f.jpg"
   },
@@ -238,7 +22,7 @@
     "name": "PC PLUG RTX 5060 + i5 12400F Gaming PC",
     "price": 3799,
     "category": "Full PCs",
-    "stock": 5,
+    "stock": 3,
     "description": "Excellent price-to-performance gaming PC pairing the 6-core i5-12400F with an 8GB RTX 5060. Comes with 16GB DDR4 3200MHz RAM, a 1TB Netac NVMe SSD, H610M motherboard, AIGO ICE400 cooler and a 650W 80+ PSU. Windows 11, 1-year warranty and free delivery included.",
     "image": "/images/products/ig-rtx5060-i5-12400f.jpg"
   },
@@ -247,7 +31,7 @@
     "name": "PC PLUG RTX 3050 + i5 12400F Gaming PC",
     "price": 3299,
     "category": "Full PCs",
-    "stock": 5,
+    "stock": 9,
     "description": "Budget-friendly 1080p gaming PC built around the i5-12400F and an 8GB RTX 3050. Includes 16GB DDR4 3200MHz RAM, a 1TB Netac NVMe SSD, H610M motherboard, AIGO ICE400 cooler and a 650W 80+ PSU. Windows 11, 1-year warranty and free delivery included.",
     "image": "/images/products/ig-rtx3050-i5-12400f.jpg"
   },
