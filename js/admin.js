@@ -345,4 +345,14 @@ function initDashboardPage() {
 
   const exportBtn = document.getElementById("exportDbBtn");
   if (exportBtn) exportBtn.addEventListener("click", exportProductsDatabase);
+
+  const reloadBtn = document.getElementById("reloadDbBtn");
+  if (reloadBtn) {
+    reloadBtn.addEventListener("click", async () => {
+      if (!confirm("Discard unsaved local edits and reload the published database?")) return;
+      await discardDraftAndReload();
+      renderAdminStats();
+      renderAdminTable();
+    });
+  }
 }

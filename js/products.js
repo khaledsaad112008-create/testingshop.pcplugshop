@@ -3,6 +3,7 @@
    ========================================================================== */
 
 const PRODUCTS_KEY = "pc_plug_products_v3";
+const PRODUCTS_DIRTY_KEY = "pc_plug_products_dirty";
 
 /* Canonical category list — the single source of truth for admin + storefront filters. */
 const CATEGORIES = [
@@ -16,14 +17,32 @@ function dataFilePath(name) {
   return window.location.pathname.includes("/admin/") ? `../data/${name}` : `data/${name}`;
 }
 
-async function seedIfEmpty() {
-  if (localStorage.getItem(PRODUCTS_KEY)) return;
+function isDraftDirty() {
+  return localStorage.getItem(PRODUCTS_DIRTY_KEY) === "true";
+}
+
+function markDraftDirty() {
+  localStorage.setItem(PRODUCTS_DIRTY_KEY, "true");
+}
+
+/* Discards any unsaved admin edits and re-syncs from the published database file. */
+async function discardDraftAndReload() {
+  localStorage.removeItem(PRODUCTS_DIRTY_KEY);
+  localStorage.removeItem(PRODUCTS_KEY);
+  await loadProducts();
+}
+
+/* Pulls the published database on every load, unless this browser has an
+   unsaved admin draft (tracked via PRODUCTS_DIRTY_KEY) that would otherwise
+   get silently overwritten before it's exported. */
+async function loadProducts() {
+  if (isDraftDirty() && localStorage.getItem(PRODUCTS_KEY)) return;
   try {
-    const res = await fetch(dataFilePath("products.json"));
+    const res = await fetch(dataFilePath("products.json"), { cache: "no-store" });
     const data = await res.json();
     localStorage.setItem(PRODUCTS_KEY, JSON.stringify(data));
   } catch (e) {
-    localStorage.setItem(PRODUCTS_KEY, JSON.stringify([]));
+    if (!localStorage.getItem(PRODUCTS_KEY)) localStorage.setItem(PRODUCTS_KEY, JSON.stringify([]));
   }
 }
 
@@ -38,6 +57,7 @@ function getProducts() {
 
 function saveProducts(products) {
   localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
+  markDraftDirty();
 }
 
 function getProductById(id) {
