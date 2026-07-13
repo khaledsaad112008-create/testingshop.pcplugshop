@@ -361,7 +361,7 @@ async function publishToDatabase() {
 
   if (btn) { btn.disabled = true; btn.textContent = "Publishing…"; }
   try {
-    const res = await fetch("/api/publish", {
+    const res = await fetch("/admin/api/publish", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ products }),
