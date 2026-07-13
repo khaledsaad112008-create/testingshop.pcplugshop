@@ -217,29 +217,83 @@
   },
   {
     "id": "p25",
-    "name": "Gaming PC — RTX 5060 Custom Build",
-    "price": 3799,
+    "name": "PC PLUG RTX 5070 + i5 14400F Gaming PC",
+    "price": 5600,
     "category": "Full PCs",
-    "stock": 3,
-    "description": "Custom-built gaming PC with RTX 5060, 16GB DDR4 RAM, H610 motherboard, Intel i5-12400F or i5-14400F, 1TB NVMe SSD. Built to order with optional liquid cooling and RAM/storage upgrades. Free Windows 10 activation and free delivery. Trade-ins considered (pay the difference).",
-    "image": "images/products/gaming-pc-rtx5060.jpg"
+    "stock": 5,
+    "description": "High-end 1440p/4K gaming rig built around the 10-core Intel i5-14400F and a 12GB RTX 5070. Paired with 16GB DDR4 3200MHz RAM, a 1TB Netac NVMe SSD, B760 motherboard, AIGO ICE400 cooler, 650W 80+ PSU and a tempered-glass case with ARGB fans. Includes genuine Windows 11, 1-year warranty and free delivery.",
+    "image": "/images/products/ig-rtx5070-i5-14400f.jpg"
   },
   {
     "id": "p26",
-    "name": "Gaming PC — RTX 5060 Custom Build (Free 6-Month Cleaning)",
-    "price": 3799,
+    "name": "PC PLUG RTX 5060 + i5 14400F Gaming PC",
+    "price": 3999,
     "category": "Full PCs",
-    "stock": 3,
-    "description": "Custom-built gaming PC with RTX 5060, 16GB DDR4 RAM, H610 motherboard, Intel i5-12400F or i5-14400F, 1TB NVMe SSD. Built to order with optional liquid cooling and RAM/storage upgrades. Free Windows 10 activation and free delivery. Trade-ins considered (pay the difference). Includes free maintenance cleaning every 6 months.",
-    "image": "images/products/gaming-pc-rtx5060.jpg"
+    "stock": 5,
+    "description": "Smooth 1080p/1440p gaming build pairing the Intel i5-14400F with an 8GB RTX 5060. Includes 16GB DDR4 3200MHz RAM, a 1TB Netac NVMe SSD, H610M motherboard, AIGO ICE400 cooler and a 650W 80+ PSU. Genuine Windows 11, 1-year warranty and free delivery included.",
+    "image": "/images/products/ig-rtx5060-i5-14400f.jpg"
   },
   {
     "id": "p27",
-    "name": "Gaming PC — RTX 5060 Custom Build (AE650W PSU)",
+    "name": "PC PLUG RTX 5060 + i5 12400F Gaming PC",
     "price": 3799,
     "category": "Full PCs",
+    "stock": 5,
+    "description": "Excellent price-to-performance gaming PC pairing the 6-core i5-12400F with an 8GB RTX 5060. Comes with 16GB DDR4 3200MHz RAM, a 1TB Netac NVMe SSD, H610M motherboard, AIGO ICE400 cooler and a 650W 80+ PSU. Windows 11, 1-year warranty and free delivery included.",
+    "image": "/images/products/ig-rtx5060-i5-12400f.jpg"
+  },
+  {
+    "id": "p28",
+    "name": "PC PLUG RTX 3050 + i5 12400F Gaming PC",
+    "price": 3299,
+    "category": "Full PCs",
+    "stock": 5,
+    "description": "Budget-friendly 1080p gaming PC built around the i5-12400F and an 8GB RTX 3050. Includes 16GB DDR4 3200MHz RAM, a 1TB Netac NVMe SSD, H610M motherboard, AIGO ICE400 cooler and a 650W 80+ PSU. Windows 11, 1-year warranty and free delivery included.",
+    "image": "/images/products/ig-rtx3050-i5-12400f.jpg"
+  },
+  {
+    "id": "p29",
+    "name": "PC PLUG RTX 3050 + i5 12400F Gaming PC Bundle",
+    "price": 3399,
+    "category": "Full PCs",
+    "stock": 5,
+    "description": "The same reliable i5-12400F + 8GB RTX 3050 build at a limited-time bundle price. 16GB DDR4 3200MHz RAM, 1TB Netac NVMe SSD, H610M motherboard, AIGO ICE400 cooler, 650W 80+ PSU. Windows Pro activated, 1-year warranty and free delivery included.",
+    "image": "/images/products/ig-rtx3050-i5-12400f-bundle.jpg"
+  },
+  {
+    "id": "p30",
+    "name": "PC PLUG RTX 5060 + i5 12400F Gaming PC Bundle (Monitor + Keyboard + Mouse)",
+    "price": 4399,
+    "category": "Full PCs",
     "stock": 3,
-    "description": "Custom-built gaming PC with RTX 5060, 16GB DDR4 RAM, H610 motherboard, Intel i5-12400F or i5-14400F, 1TB NVMe SSD. Built to order with optional liquid cooling and RAM/storage upgrades. Free Windows 10 activation and free delivery. Trade-ins considered (pay the difference). Comes with an AE650W power supply unit.",
-    "image": "images/products/gaming-pc-rtx5060.jpg"
+    "description": "Complete gaming setup bundle: an i5-12400F + 8GB RTX 5060 PC with 16GB DDR4 3200MHz RAM, a 1TB NVMe SSD and H610M motherboard, plus a Twisted Minds 24\" 144Hz gaming monitor and an RGB keyboard/mouse combo. Windows Pro activated, 1-year warranty and free delivery included.",
+    "image": "/images/products/ig-rtx5060-i5-12400f-bundle.jpg"
+  },
+  {
+    "id": "p31",
+    "name": "Twisted Minds TM24FHD1441PS 24\" 144Hz Gaming Monitor",
+    "price": 399,
+    "category": "Monitors",
+    "stock": 10,
+    "description": "24-inch Full HD IPS gaming monitor with a 144Hz refresh rate and 1ms response time. NVIDIA G-Sync and AMD FreeSync compatible with HDMI 2.1 connectivity, built for fast, tear-free competitive gaming.",
+    "image": "/images/products/ig-twistedminds-monitor.jpg"
+  },
+  {
+    "id": "p32",
+    "name": "DarkFlash DG240 ARGB AIO Liquid Cooler",
+    "price": 265,
+    "category": "Cooling",
+    "stock": 12,
+    "description": "240mm all-in-one liquid CPU cooler with dual ARGB fans and a clean white finish. Keeps high-performance CPUs cool and quiet while adding customizable RGB lighting to any build.",
+    "image": "/images/products/ig-darkflash-cooler.jpg"
+  },
+  {
+    "id": "p33",
+    "name": "Fantech MK875V2 Atom 81 RGB Mechanical Gaming Keyboard (Navy Blue)",
+    "price": 129,
+    "category": "Keyboards",
+    "stock": 15,
+    "description": "Compact 65% mechanical gaming keyboard with hot-swappable 3-pin red switches and per-key RGB across 17 lighting modes. A durable navy blue colorway gives it a distinct look without sacrificing performance.",
+    "image": "/images/products/ig-fantech-keyboard.jpg"
   }
 ]
