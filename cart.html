@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Your Cart — PC PLUG</title>
   <link rel="icon" href="images/logo.png" type="image/png" />
-  <link rel="stylesheet" href="css/style.css?v=6" />
+  <link rel="stylesheet" href="css/style.css?v=7" />
 </head>
 <body>
   <header class="navbar">
@@ -30,7 +30,10 @@
   </header>
 
   <main class="cart-page">
-    <h1>Your Cart</h1>
+    <div class="cart-page-header">
+      <h1>Your Cart</h1>
+      <button type="button" class="btn btn-outline btn-sm" id="clearCartBtn">Remove All</button>
+    </div>
     <div class="cart-items" id="cartItems"></div>
     <aside class="cart-summary" id="cartSummary"></aside>
   </main>
@@ -39,8 +42,8 @@
     &copy; 2026 PC PLUG. All rights reserved.
   </footer>
 
-  <script src="js/products.js?v=7"></script>
-  <script src="js/cart.js?v=3"></script>
+  <script src="js/products.js?v=8"></script>
+  <script src="js/cart.js?v=4"></script>
   <script src="js/theme.js?v=2"></script>
   <script>
     document.addEventListener("DOMContentLoaded", async () => {

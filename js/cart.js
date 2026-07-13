@@ -83,9 +83,12 @@ function updateCartBadge() {
 function renderCartPage() {
   const itemsWrap = document.getElementById("cartItems");
   const summaryWrap = document.getElementById("cartSummary");
+  const clearBtn = document.getElementById("clearCartBtn");
   if (!itemsWrap) return;
 
   const lines = getCartLines();
+
+  if (clearBtn) clearBtn.style.display = lines.length ? "" : "none";
 
   if (!lines.length) {
     itemsWrap.innerHTML = `
@@ -148,7 +151,7 @@ function renderCartSummary() {
     <div class="summary-row"><span>Shipping</span><span>${shipping === 0 ? "Free" : formatPrice(shipping)}</span></div>
     <div class="summary-row"><span>Tax (0%)</span><span>${formatPrice(tax)}</span></div>
     <div class="summary-row total"><span>Total</span><span>${formatPrice(total)}</span></div>
-    <button class="btn btn-primary btn-block" id="checkoutBtn" style="margin-top:16px;">Checkout via WhatsApp</button>
+    <button class="btn btn-primary btn-block" id="checkoutBtn" style="margin-top:16px;">${whatsappIcon()} Checkout via WhatsApp</button>
     <form id="checkoutForm" class="checkout-form" style="display:none;">
       <div class="field">
         <label for="checkoutName">Full Name</label>
@@ -159,9 +162,9 @@ function renderCartSummary() {
         <input type="tel" id="checkoutPhone" required placeholder="e.g. 97450001234" autocomplete="tel" />
       </div>
       <div class="field-error" id="checkoutError"></div>
-      <button type="submit" class="btn btn-primary btn-block">Send Order via WhatsApp</button>
+      <button type="submit" class="btn btn-primary btn-block">${whatsappIcon()} Send Order via WhatsApp</button>
     </form>
-    <p class="whatsapp-note">💬 You'll be redirected to WhatsApp with your order pre-filled — just hit send.</p>
+    <p class="whatsapp-note">${whatsappIcon()} You'll be redirected to WhatsApp with your order pre-filled — just hit send.</p>
   `;
 
   document.getElementById("checkoutBtn").addEventListener("click", () => {
@@ -213,15 +216,24 @@ function sendOrderToWhatsApp(name, phone) {
   const message = buildOrderMessage(name, phone);
   const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
   window.open(url, "_blank", "noopener");
-  saveCart([]);
-  renderCartPage();
-  updateCartBadge();
   showToast("Order sent! Confirm it on WhatsApp to complete checkout.");
 }
 
 function initCartPage() {
   const itemsWrap = document.getElementById("cartItems");
   if (!itemsWrap) return;
+
+  const clearBtn = document.getElementById("clearCartBtn");
+  if (clearBtn) {
+    clearBtn.addEventListener("click", () => {
+      if (!getCart().length) return;
+      if (!confirm("Remove all items from your cart?")) return;
+      saveCart([]);
+      renderCartPage();
+      updateCartBadge();
+      showToast("Cart cleared");
+    });
+  }
 
   itemsWrap.addEventListener("click", (e) => {
     const cartItem = e.target.closest(".cart-item");
