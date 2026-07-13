@@ -104,7 +104,7 @@ function getCategories() {
 
 /* ---------- Helpers ---------- */
 function formatPrice(num) {
-  return "$" + Number(num).toFixed(2);
+  return Number(num).toFixed(2) + " QAR";
 }
 
 function stockStatus(stock) {

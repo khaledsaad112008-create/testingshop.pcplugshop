@@ -214,5 +214,32 @@
     "stock": 100,
     "description": "Digital $25 PSN credit, instant code delivery.",
     "image": "https://picsum.photos/seed/pcplug-giftcard-psn/500/400"
+  },
+  {
+    "id": "p25",
+    "name": "Gaming PC — RTX 5060 Custom Build",
+    "price": 3799,
+    "category": "Full PCs",
+    "stock": 3,
+    "description": "Custom-built gaming PC with RTX 5060, 16GB DDR4 RAM, H610 motherboard, Intel i5-12400F or i5-14400F, 1TB NVMe SSD. Built to order with optional liquid cooling and RAM/storage upgrades. Free Windows 10 activation and free delivery. Trade-ins considered (pay the difference).",
+    "image": "images/products/gaming-pc-rtx5060.jpg"
+  },
+  {
+    "id": "p26",
+    "name": "Gaming PC — RTX 5060 Custom Build (Free 6-Month Cleaning)",
+    "price": 3799,
+    "category": "Full PCs",
+    "stock": 3,
+    "description": "Custom-built gaming PC with RTX 5060, 16GB DDR4 RAM, H610 motherboard, Intel i5-12400F or i5-14400F, 1TB NVMe SSD. Built to order with optional liquid cooling and RAM/storage upgrades. Free Windows 10 activation and free delivery. Trade-ins considered (pay the difference). Includes free maintenance cleaning every 6 months.",
+    "image": "images/products/gaming-pc-rtx5060.jpg"
+  },
+  {
+    "id": "p27",
+    "name": "Gaming PC — RTX 5060 Custom Build (AE650W PSU)",
+    "price": 3799,
+    "category": "Full PCs",
+    "stock": 3,
+    "description": "Custom-built gaming PC with RTX 5060, 16GB DDR4 RAM, H610 motherboard, Intel i5-12400F or i5-14400F, 1TB NVMe SSD. Built to order with optional liquid cooling and RAM/storage upgrades. Free Windows 10 activation and free delivery. Trade-ins considered (pay the difference). Comes with an AE650W power supply unit.",
+    "image": "images/products/gaming-pc-rtx5060.jpg"
   }
 ]

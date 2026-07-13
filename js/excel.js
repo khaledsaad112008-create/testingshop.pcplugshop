@@ -51,9 +51,9 @@ function exportProductsToExcel() {
     ID: p.id,
     Name: p.name,
     Category: p.category,
-    "Price ($)": p.price,
+    "Price (QAR)": p.price,
     Stock: p.stock,
-    "Stock Value ($)": Number((p.price * p.stock).toFixed(2)),
+    "Stock Value (QAR)": Number((p.price * p.stock).toFixed(2)),
     Description: p.description || "",
     Image: p.image,
   }));
