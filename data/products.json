@@ -4,7 +4,7 @@
     "name": "AMD Ryzen 7 7800X3D",
     "price": 379.99,
     "category": "CPUs",
-    "stock": 24,
+    "stock": 130,
     "description": "8-core/16-thread gaming CPU with 3D V-Cache. Socket AM5.",
     "image": "https://picsum.photos/seed/pcplug-cpu-amd/500/400"
   },
