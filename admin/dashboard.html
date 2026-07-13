@@ -93,12 +93,14 @@
         <div style="display:flex;gap:8px;">
           <button class="btn btn-outline" id="reloadDbBtn">↻ Reload from Database</button>
           <button class="btn btn-outline" id="exportDbBtn">⬇ Export Database</button>
+          <button class="btn btn-primary" id="publishDbBtn">⬆ Publish to GitHub</button>
         </div>
       </div>
       <p class="page-sub" style="margin:-10px 0 18px;font-size:0.85rem;">
-        Your edits only apply to this browser until <code>data/products.json</code> is updated in the site's
-        source. Export it here whenever you want your changes to go live for every visitor, or discard
-        this draft and reload the published database with "Reload from Database".
+        Your edits only apply to this browser until published. "Publish to GitHub" commits
+        <code>data/products.json</code> straight to the live site (changes go live within a minute
+        or two). "Export Database" remains as a manual fallback, and "Reload from Database" discards
+        this draft and re-syncs from what's currently published.
       </p>
       <p id="dbSyncStatus" class="page-sub" style="margin:-8px 0 18px;font-size:0.8rem;"></p>
       <div class="table-wrap">
@@ -121,7 +123,7 @@
 
   <script src="../js/products.js?v=7"></script>
   <script src="../js/cart.js?v=3"></script>
-  <script src="../js/admin.js?v=5"></script>
+  <script src="../js/admin.js?v=6"></script>
   <script src="../js/theme.js?v=2"></script>
   <script>
     document.addEventListener("DOMContentLoaded", async () => {

@@ -332,9 +332,9 @@ function exportProductsDatabase() {
   URL.revokeObjectURL(url);
 }
 
-/* Shows exactly what the last fetch from data/products.json returned (source
-   URL, product count, time) so a stale reload is visible immediately instead
-   of looking like nothing happened. */
+/* Shows exactly what the last fetch (or publish) returned — source/commit,
+   product count, time — so a stale reload is visible immediately instead of
+   looking like nothing happened. */
 function renderDbSyncStatus() {
   const el = document.getElementById("dbSyncStatus");
   if (!el) return;
@@ -344,8 +344,62 @@ function renderDbSyncStatus() {
     return;
   }
   const time = new Date(info.time).toLocaleTimeString();
+  if (info.publish) {
+    el.innerHTML = `Published to GitHub at ${time} — ${info.count} products. ` +
+      `<a href="${info.url}" target="_blank" rel="noopener">View commit</a>.`;
+    return;
+  }
   el.innerHTML = `Last synced from <code>${info.url}</code> at ${time} — ${info.count} products. ` +
     `Fetching from this host: if this is the live site, it only reflects what's been pushed to <code>main</code>, not files replaced on your local disk.`;
+}
+
+/* ---------- Publish database ---------- */
+async function publishToDatabase() {
+  const btn = document.getElementById("publishDbBtn");
+  const products = getProducts();
+  if (!confirm(`Publish ${products.length} products to the live site now? This commits directly to main.`)) return;
+
+  if (btn) { btn.disabled = true; btn.textContent = "Publishing…"; }
+  try {
+    const res = await fetch("/api/publish", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ products }),
+    });
+
+    if (res.status === 401 || res.status === 403) {
+      alert("Publish failed: not authenticated with Cloudflare Access, or your session there expired. Reload the page to re-authenticate, then try again.");
+      return;
+    }
+
+    const data = await res.json().catch(() => null);
+    if (!res.ok || !data || !data.ok) {
+      const error = data && data.error;
+      const reason = error === "conflict"
+        ? "The published database changed since you last loaded it. Click \"Reload from Database\" to get the latest version, then redo your edits."
+        : error === "invalid_payload"
+        ? "Nothing to publish, or the data looked invalid — no commit was made."
+        : error === "auth"
+        ? "Publish failed: the publish service rejected its own GitHub credentials. This needs to be fixed at the infrastructure level, not by re-editing products."
+        : "Publish failed (network or server error). Nothing was changed on the live site — safe to retry.";
+      alert(reason);
+      return;
+    }
+
+    localStorage.removeItem(PRODUCTS_DIRTY_KEY);
+    localStorage.setItem(PRODUCTS_LAST_SYNC_KEY, JSON.stringify({
+      count: data.count,
+      url: `https://github.com/khaledsaad112008-create/testingshop.pcplugshop/commit/${data.commitSha}`,
+      time: Date.now(),
+      publish: true,
+    }));
+    renderDbSyncStatus();
+    alert(`Published ${data.count} products to main.\nGitHub Pages will redeploy shortly — the live site may take a minute to update.`);
+  } catch (e) {
+    alert("Publish failed: could not reach the publish service. Check your connection and try again.");
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = "⬆ Publish to GitHub"; }
+  }
 }
 
 /* ---------- Dashboard init ---------- */
@@ -362,6 +416,9 @@ function initDashboardPage() {
 
   const exportBtn = document.getElementById("exportDbBtn");
   if (exportBtn) exportBtn.addEventListener("click", exportProductsDatabase);
+
+  const publishBtn = document.getElementById("publishDbBtn");
+  if (publishBtn) publishBtn.addEventListener("click", publishToDatabase);
 
   const reloadBtn = document.getElementById("reloadDbBtn");
   if (reloadBtn) {
