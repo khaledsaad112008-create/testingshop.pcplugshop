@@ -107,7 +107,7 @@ function renderCartPage() {
     .map(
       (line) => `
       <div class="cart-item" data-id="${line.product.id}">
-        <a href="product.html?id=${encodeURIComponent(line.product.id)}" class="thumb">
+        <a href="product.html?id=${encodeURIComponent(line.product.id)}" class="thumb" style="background-image:url('${line.product.image}')">
           <img src="${line.product.image}" alt="${escapeHtml(line.product.name)}" />
         </a>
         <div class="details">

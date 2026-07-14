@@ -155,7 +155,7 @@ function productCardHtml(p, index) {
   const status = stockStatus(p.stock);
   return `
     <div class="product-card" data-id="${p.id}" style="--card-i:${index}">
-      <a href="product.html?id=${encodeURIComponent(p.id)}" class="thumb">
+      <a href="product.html?id=${encodeURIComponent(p.id)}" class="thumb" style="background-image:url('${p.image}')">
         <img src="${p.image}" alt="${escapeHtml(p.name)}" loading="lazy" />
       </a>
       <div class="body">
@@ -269,7 +269,7 @@ function initProductDetailPage() {
   const status = stockStatus(product.stock);
 
   wrap.innerHTML = `
-    <div class="image-wrap">
+    <div class="image-wrap" style="background-image:url('${product.image}')">
       <img src="${product.image}" alt="${escapeHtml(product.name)}" />
     </div>
     <div class="info">
