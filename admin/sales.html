@@ -90,15 +90,17 @@
     <section class="panel">
       <div class="panel-header-row">
         <h2>This Month's Sales</h2>
-        <div style="display:flex;gap:8px;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
           <button class="btn btn-outline" id="exportMonthBtn">⬇ Download This Month (.xlsx)</button>
-          <button class="btn btn-primary" id="syncSalesBtn">⬆ Sync to GitHub</button>
+          <button class="btn btn-outline" id="syncSalesBtn">⬆ Sync to GitHub</button>
+          <button class="btn btn-primary" id="forceExportMonthBtn">⚡ Sync &amp; Export to GitHub Now</button>
         </div>
       </div>
       <p class="page-sub" style="margin:-10px 0 18px;font-size:0.85rem;">
-        Sales stay in this browser until synced. Syncing commits <code>data/sales.json</code> to
-        the live site, which also feeds the automatic monthly report — a report for a month only
-        gets generated on the 1st if that month's sales were synced at some point during it.
+        Sales stay in this browser until synced. A report for a month normally only gets generated
+        automatically on the 1st of the next month — use "Sync &amp; Export to GitHub Now" to force
+        this month's (or a past month's) <code>sales-reports/</code> file to update immediately
+        instead of waiting.
       </p>
       <p id="salesSyncStatus" class="page-sub" style="margin:-8px 0 18px;font-size:0.8rem;"></p>
       <div class="table-wrap">
@@ -133,7 +135,7 @@
               <th>Revenue</th>
               <th>Units</th>
               <th>Sales</th>
-              <th>Actions</th>
+              <th style="min-width:280px;">Actions</th>
             </tr>
           </thead>
           <tbody id="archiveBody"></tbody>
@@ -144,10 +146,10 @@
 
   <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
   <script src="../js/products.js?v=9"></script>
-  <script src="../js/sales.js?v=1"></script>
+  <script src="../js/sales.js?v=2"></script>
   <script src="../js/admin.js?v=7"></script>
   <script src="../js/theme.js?v=2"></script>
-  <script src="../js/sales-admin.js?v=1"></script>
+  <script src="../js/sales-admin.js?v=2"></script>
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
       requireAdminAuth();

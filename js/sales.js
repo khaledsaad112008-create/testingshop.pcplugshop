@@ -218,6 +218,34 @@ async function syncSalesToGitHub() {
   return data;
 }
 
+/* Forces the GitHub-side monthly export to run right now for the given
+   month, instead of waiting for the cron trigger on the 1st. Reads whatever
+   is currently published in data/sales.json, so call syncSalesToGitHub()
+   first if there are unsynced local edits for that month. */
+async function forceExportSalesMonth(monthKey) {
+  const res = await fetch("/admin/api/sales/export", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ monthKey }),
+  });
+
+  if (res.status === 401 || res.status === 403) {
+    throw new Error("Not authenticated with Cloudflare Access, or your session expired. Reload the page and try again.");
+  }
+  const data = await res.json().catch(() => null);
+  if (!res.ok || !data || !data.ok) {
+    throw new Error("Export failed (network or server error). Safe to retry.");
+  }
+  return data;
+}
+
+/* Syncs the local draft to GitHub first, then force-exports that month's
+   report — the combined action the admin's "Sync & Export" buttons use. */
+async function syncAndExportSalesMonth(monthKey) {
+  await syncSalesToGitHub();
+  return forceExportSalesMonth(monthKey);
+}
+
 function markSalesSynced(data) {
   localStorage.removeItem(SALES_DIRTY_KEY);
   localStorage.setItem(SALES_LAST_SYNC_KEY, JSON.stringify({

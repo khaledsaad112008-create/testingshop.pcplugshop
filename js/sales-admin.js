@@ -86,6 +86,7 @@ function renderArchiveTable() {
           <td>${totals.count}</td>
           <td class="actions-cell">
             <button class="btn btn-outline btn-sm archive-export-btn">⬇ Download .xlsx</button>
+            <button class="btn btn-primary btn-sm archive-force-export-btn">⚡ Sync &amp; Export</button>
           </td>
         </tr>
       `;
@@ -193,12 +194,36 @@ function initSalesTable() {
 function initArchiveTable() {
   const tbody = document.getElementById("archiveBody");
   if (!tbody) return;
-  tbody.addEventListener("click", (e) => {
+  tbody.addEventListener("click", async (e) => {
     const row = e.target.closest("tr");
     if (!row) return;
+    const monthKey = row.dataset.month;
+
     if (e.target.closest(".archive-export-btn")) {
-      const exported = exportSalesMonthToExcel(row.dataset.month);
+      const exported = exportSalesMonthToExcel(monthKey);
       if (!exported) alert("No sales found for that month.");
+      return;
+    }
+
+    const forceBtn = e.target.closest(".archive-force-export-btn");
+    if (forceBtn) {
+      if (!confirm(`Sync all local sales and regenerate sales-reports/${monthKey}.xlsx on GitHub now?`)) return;
+      forceBtn.disabled = true;
+      forceBtn.textContent = "Working…";
+      try {
+        const result = await syncAndExportSalesMonth(monthKey);
+        renderSalesSyncStatus();
+        alert(
+          result.skipped
+            ? `No sales found for ${monthLabel(monthKey)} in the synced data — nothing to export.`
+            : `sales-reports/${monthKey}.xlsx updated on GitHub (${result.count} entries).`
+        );
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        forceBtn.disabled = false;
+        forceBtn.innerHTML = "⚡ Sync &amp; Export";
+      }
     }
   });
 }
@@ -255,6 +280,30 @@ function initSalesPage() {
       } finally {
         syncBtn.disabled = false;
         syncBtn.textContent = "⬆ Sync to GitHub";
+      }
+    });
+  }
+
+  const forceExportBtn = document.getElementById("forceExportMonthBtn");
+  if (forceExportBtn) {
+    forceExportBtn.addEventListener("click", async () => {
+      const monthKey = currentMonthKey();
+      if (!confirm(`Sync all local sales and generate sales-reports/${monthKey}.xlsx on GitHub right now?`)) return;
+      forceExportBtn.disabled = true;
+      forceExportBtn.textContent = "Working…";
+      try {
+        const result = await syncAndExportSalesMonth(monthKey);
+        renderSalesSyncStatus();
+        alert(
+          result.skipped
+            ? `No sales logged for ${monthLabel(monthKey)} yet — nothing to export.`
+            : `sales-reports/${monthKey}.xlsx updated on GitHub (${result.count} entries).`
+        );
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        forceExportBtn.disabled = false;
+        forceExportBtn.innerHTML = "⚡ Sync &amp; Export to GitHub Now";
       }
     });
   }

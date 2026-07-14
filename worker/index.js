@@ -5,7 +5,7 @@
 
 import { jsonResponse } from "./github.js";
 import { handlePublishProducts } from "./publish.js";
-import { handleSyncSales, handleMonthlyExport } from "./sales.js";
+import { handleSyncSales, handleMonthlyExport, handleForceExport } from "./sales.js";
 
 export default {
   async fetch(request, env) {
@@ -16,6 +16,9 @@ export default {
     }
     if (pathname === "/admin/api/sales/sync") {
       return handleSyncSales(request, env);
+    }
+    if (pathname === "/admin/api/sales/export") {
+      return handleForceExport(request, env);
     }
     return jsonResponse(404, { ok: false, error: "not_found" });
   },

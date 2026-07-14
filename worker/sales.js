@@ -92,14 +92,11 @@ function previousMonthKey(now) {
   return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
 }
 
-/* Runs on the Worker's cron trigger (1st of every month). Reads the synced
-   sales log, pulls out last month's entries, and commits an .xlsx report for
-   that month into sales-reports/ — fully automatic, no admin visit needed,
-   as long as sales were synced to GitHub via "Sync to GitHub" during the month. */
-export async function handleMonthlyExport(env, when) {
-  const now = when || new Date();
-  const monthKey = previousMonthKey(now);
-
+/* Core export: reads the synced sales log, pulls out the given month's
+   entries, and commits an .xlsx report for that month into sales-reports/.
+   Shared by the cron trigger (previous month, automatic) and the admin's
+   manual "force export" button (any month, on demand). */
+async function exportMonthReport(env, monthKey) {
   const sales = await getJsonFile(SALES_FILE_PATH, env.GITHUB_TOKEN, []);
   const monthSales = sales
     .filter((s) => (s.date || "").slice(0, 7) === monthKey)
@@ -115,7 +112,7 @@ export async function handleMonthlyExport(env, when) {
   const putRes = await putFile(
     reportPath,
     base64,
-    `Auto-generate ${monthKey} sales report (${monthSales.length} entries)`,
+    `Generate ${monthKey} sales report (${monthSales.length} entries)`,
     env.GITHUB_TOKEN,
     shaRes.sha
   );
@@ -126,4 +123,39 @@ export async function handleMonthlyExport(env, when) {
   }
 
   return { ok: true, monthKey, count: monthSales.length };
+}
+
+/* Runs on the Worker's cron trigger (1st of every month) — fully automatic,
+   no admin visit needed, as long as sales were synced to GitHub via "Sync to
+   GitHub" at some point during the month. */
+export async function handleMonthlyExport(env, when) {
+  const now = when || new Date();
+  return exportMonthReport(env, previousMonthKey(now));
+}
+
+/* Admin-triggered equivalent — lets the Sales page force-generate a report
+   for any month right now, instead of waiting for the 1st. */
+export async function handleForceExport(request, env) {
+  if (request.method !== "POST") {
+    return jsonResponse(405, { ok: false, error: "invalid_payload", detail: "POST only" });
+  }
+
+  let monthKey;
+  try {
+    const body = await request.json();
+    monthKey = body.monthKey;
+  } catch (e) {
+    return jsonResponse(400, { ok: false, error: "invalid_payload", detail: "Malformed JSON body" });
+  }
+  if (!/^\d{4}-\d{2}$/.test(monthKey || "")) {
+    return jsonResponse(400, { ok: false, error: "invalid_payload", detail: "monthKey must be YYYY-MM" });
+  }
+
+  try {
+    const result = await exportMonthReport(env, monthKey);
+    if (!result.ok) return jsonResponse(502, { ok: false, error: "network", detail: result.detail });
+    return jsonResponse(200, result);
+  } catch (e) {
+    return jsonResponse(502, { ok: false, error: "network", detail: "Could not reach GitHub" });
+  }
 }
