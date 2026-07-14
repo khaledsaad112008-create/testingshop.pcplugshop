@@ -1,15 +1,15 @@
 [
   {
-    "id": "smrkgi57guz4b",
+    "id": "smrkgjewh91gq",
     "date": "2026-07-14",
     "month": "2026-07",
-    "productId": "p27",
-    "name": "PC PLUG RTX 5060 + i5 12400F Gaming PC",
+    "productId": "p26",
+    "name": "PC PLUG RTX 5060 + i5 14400F Gaming PC",
     "category": "Full PCs",
-    "quantity": 2,
-    "unitPrice": 3450,
-    "total": 6900,
+    "quantity": 1,
+    "unitPrice": 3400,
+    "total": 3400,
     "note": "",
-    "loggedAt": 1784021777116
+    "loggedAt": 1784021836337
   }
 ]
