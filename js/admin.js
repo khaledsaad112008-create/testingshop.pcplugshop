@@ -195,7 +195,7 @@ function initAddProductForm() {
     reader.readAsDataURL(file);
   });
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const name = document.getElementById("newName").value.trim();
     const price = document.getElementById("newPrice").value;
@@ -206,12 +206,19 @@ function initAddProductForm() {
 
     if (!name || !category || price === "" || stock === "") return;
 
-    addProduct({ name, price, category, stock, image, description });
-
-    form.reset();
-    imagePreview.src = "https://picsum.photos/seed/plug-default/100/100";
-    renderAdminStats();
-    renderAdminTable();
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    try {
+      await addProduct({ name, price, category, stock, image, description });
+      form.reset();
+      imagePreview.src = "https://picsum.photos/seed/plug-default/100/100";
+      renderAdminStats();
+      renderAdminTable();
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      submitBtn.disabled = false;
+    }
   });
 }
 
@@ -271,7 +278,7 @@ function initAdminTable() {
   const tbody = document.getElementById("adminProductsBody");
   if (!tbody) return;
 
-  tbody.addEventListener("click", (e) => {
+  tbody.addEventListener("click", async (e) => {
     const row = e.target.closest("tr");
     if (!row) return;
     const id = row.dataset.id;
@@ -291,9 +298,13 @@ function initAdminTable() {
     if (e.target.closest(".delete-btn")) {
       const product = getProductById(id);
       if (confirm(`Delete "${product ? product.name : "this product"}"? This cannot be undone.`)) {
-        deleteProduct(id);
-        renderAdminStats();
-        renderAdminTable();
+        try {
+          await deleteProduct(id);
+          renderAdminStats();
+          renderAdminTable();
+        } catch (err) {
+          alert(err.message);
+        }
       }
       return;
     }
@@ -306,100 +317,22 @@ function initAdminTable() {
 
       if (!name || !category || price === "" || stock === "") return;
 
-      updateProduct(id, {
-        name,
-        category,
-        price: Number(price),
-        stock: Number(stock),
-      });
-
-      editingProductId = null;
-      renderAdminStats();
-      renderAdminTable();
+      try {
+        await updateProduct(id, {
+          name,
+          category,
+          price: Number(price),
+          stock: Number(stock),
+        });
+        editingProductId = null;
+        renderAdminStats();
+        renderAdminTable();
+      } catch (err) {
+        alert(err.message);
+      }
       return;
     }
   });
-}
-
-/* ---------- Export database ---------- */
-function exportProductsDatabase() {
-  const blob = new Blob([JSON.stringify(getProducts(), null, 2)], { type: "application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "products.json";
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-/* Shows exactly what the last fetch (or publish) returned — source/commit,
-   product count, time — so a stale reload is visible immediately instead of
-   looking like nothing happened. */
-function renderDbSyncStatus() {
-  const el = document.getElementById("dbSyncStatus");
-  if (!el) return;
-  const info = getLastSyncInfo();
-  if (!info) {
-    el.textContent = "";
-    return;
-  }
-  const time = new Date(info.time).toLocaleTimeString();
-  if (info.publish) {
-    el.innerHTML = `Published to GitHub at ${time} — ${info.count} products. ` +
-      `<a href="${info.url}" target="_blank" rel="noopener">View commit</a>.`;
-    return;
-  }
-  el.innerHTML = `Last synced from <code>${info.url}</code> at ${time} — ${info.count} products. ` +
-    `Fetching from this host: if this is the live site, it only reflects what's been pushed to <code>main</code>, not files replaced on your local disk.`;
-}
-
-/* ---------- Publish database ---------- */
-async function publishToDatabase() {
-  const btn = document.getElementById("publishDbBtn");
-  const products = getProducts();
-  if (!confirm(`Publish ${products.length} products to the live site now? This commits directly to main.`)) return;
-
-  if (btn) { btn.disabled = true; btn.textContent = "Publishing…"; }
-  try {
-    const res = await fetch("/admin/api/publish", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ products }),
-    });
-
-    if (res.status === 401 || res.status === 403) {
-      alert("Publish failed: not authenticated with Cloudflare Access, or your session there expired. Reload the page to re-authenticate, then try again.");
-      return;
-    }
-
-    const data = await res.json().catch(() => null);
-    if (!res.ok || !data || !data.ok) {
-      const error = data && data.error;
-      const reason = error === "conflict"
-        ? "The published database changed since you last loaded it. Click \"Reload from Database\" to get the latest version, then redo your edits."
-        : error === "invalid_payload"
-        ? "Nothing to publish, or the data looked invalid — no commit was made."
-        : error === "auth"
-        ? "Publish failed: the publish service rejected its own GitHub credentials. This needs to be fixed at the infrastructure level, not by re-editing products."
-        : "Publish failed (network or server error). Nothing was changed on the live site — safe to retry.";
-      alert(reason);
-      return;
-    }
-
-    localStorage.removeItem(PRODUCTS_DIRTY_KEY);
-    localStorage.setItem(PRODUCTS_LAST_SYNC_KEY, JSON.stringify({
-      count: data.count,
-      url: `https://github.com/khaledsaad112008-create/testingshop.pcplugshop/commit/${data.commitSha}`,
-      time: Date.now(),
-      publish: true,
-    }));
-    renderDbSyncStatus();
-    alert(`Published ${data.count} products to main.\nGitHub Pages will redeploy shortly — the live site may take a minute to update.`);
-  } catch (e) {
-    alert("Publish failed: could not reach the publish service. Check your connection and try again.");
-  } finally {
-    if (btn) { btn.disabled = false; btn.textContent = "⬆ Publish to GitHub"; }
-  }
 }
 
 /* ---------- Dashboard init ---------- */
@@ -409,29 +342,7 @@ function initDashboardPage() {
   initAddProductForm();
   renderAdminTable();
   initAdminTable();
-  renderDbSyncStatus();
 
   const logoutBtn = document.getElementById("logoutBtn");
   if (logoutBtn) logoutBtn.addEventListener("click", (e) => { e.preventDefault(); adminLogout(); });
-
-  const exportBtn = document.getElementById("exportDbBtn");
-  if (exportBtn) exportBtn.addEventListener("click", exportProductsDatabase);
-
-  const publishBtn = document.getElementById("publishDbBtn");
-  if (publishBtn) publishBtn.addEventListener("click", publishToDatabase);
-
-  const reloadBtn = document.getElementById("reloadDbBtn");
-  if (reloadBtn) {
-    reloadBtn.addEventListener("click", async () => {
-      if (!confirm("Discard unsaved local edits and reload the published database?")) return;
-      await discardDraftAndReload();
-      renderAdminStats();
-      renderAdminTable();
-      renderDbSyncStatus();
-      const info = getLastSyncInfo();
-      if (info) {
-        alert(`Reloaded ${info.count} products from:\n${info.url}\n\nIf this still looks like your old data, your edit hasn't been pushed to main yet — replacing the local file isn't enough on the live site.`);
-      }
-    });
-  }
 }

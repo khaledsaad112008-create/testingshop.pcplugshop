@@ -2,13 +2,13 @@ name = "pcplug-publish-worker"
 main = "worker/index.js"
 compatibility_date = "2026-07-13"
 
-[[routes]]
-pattern = "vivapcplug.dpdns.org/admin/api/publish*"
-zone_name = "vivapcplug.dpdns.org"
-
-[[routes]]
-pattern = "vivapcplug.dpdns.org/admin/api/sales/*"
-zone_name = "vivapcplug.dpdns.org"
+# Routes intentionally removed as of the self-host migration — the local
+# server (server/) now handles /admin/api/* directly via the Cloudflare
+# Tunnel. Leaving these routes live would silently keep routing admin writes
+# to this old Worker (which still holds a valid GITHUB_TOKEN) instead of the
+# new server. The cron trigger below is left running as a redundant backup
+# during the transition — full decommission (deleting this Worker and its
+# routes/crons) happens after a stability period, see docs/PROJECT_CONTEXT.txt.
 
 # Runs at 01:00 UTC on the 1st of every month — generates and commits last
 # month's sales-reports/YYYY-MM.xlsx automatically, no admin visit required.

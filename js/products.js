@@ -1,10 +1,6 @@
 /* ==========================================================================
-   PLUG — Product data + localStorage logic
+   PLUG — Product data + local server API logic
    ========================================================================== */
-
-const PRODUCTS_KEY = "pc_plug_products_v3";
-const PRODUCTS_DIRTY_KEY = "pc_plug_products_dirty";
-const PRODUCTS_LAST_SYNC_KEY = "pc_plug_last_sync";
 
 /* Canonical category list — the single source of truth for admin + storefront filters. */
 const CATEGORIES = [
@@ -13,107 +9,58 @@ const CATEGORIES = [
   "Full PCs", "Laptops", "Networking", "Gift Cards",
 ];
 
-/* The product catalog lives in data/products.json (the "database"), not in this file. */
-function dataFilePath(name) {
-  return window.location.pathname.includes("/admin/") ? `../data/${name}` : `data/${name}`;
-}
+/* In-memory only — the local server is the source of truth, fetched fresh
+   on every page load. No localStorage draft: writes go straight to the
+   server and are live immediately, nothing to publish. */
+let _products = [];
 
-function isDraftDirty() {
-  return localStorage.getItem(PRODUCTS_DIRTY_KEY) === "true";
-}
-
-function markDraftDirty() {
-  localStorage.setItem(PRODUCTS_DIRTY_KEY, "true");
-}
-
-/* Discards any unsaved admin edits and re-syncs from the published database file. */
-async function discardDraftAndReload() {
-  localStorage.removeItem(PRODUCTS_DIRTY_KEY);
-  localStorage.removeItem(PRODUCTS_KEY);
-  await loadProducts();
-}
-
-/* Pulls the published database on every load, unless this browser has an
-   unsaved admin draft (tracked via PRODUCTS_DIRTY_KEY) that would otherwise
-   get silently overwritten before it's exported. */
 async function loadProducts() {
-  if (isDraftDirty() && localStorage.getItem(PRODUCTS_KEY)) return;
-  const path = dataFilePath("products.json");
   try {
-    const res = await fetch(path, { cache: "no-store" });
-    const data = await res.json();
-    localStorage.setItem(PRODUCTS_KEY, JSON.stringify(data));
-    localStorage.setItem(PRODUCTS_LAST_SYNC_KEY, JSON.stringify({
-      count: data.length,
-      url: new URL(path, window.location.href).href,
-      time: Date.now(),
-    }));
+    const res = await fetch("/api/products", { cache: "no-store" });
+    _products = await res.json();
   } catch (e) {
-    if (!localStorage.getItem(PRODUCTS_KEY)) localStorage.setItem(PRODUCTS_KEY, JSON.stringify([]));
-  }
-}
-
-/* Info about the last successful fetch from the published database file —
-   used by the admin dashboard to show what it actually loaded, so a stale
-   reload (e.g. live site not yet re-deployed) is obvious instead of confusing. */
-function getLastSyncInfo() {
-  try {
-    return JSON.parse(localStorage.getItem(PRODUCTS_LAST_SYNC_KEY));
-  } catch (e) {
-    return null;
+    _products = _products || [];
   }
 }
 
 /* ---------- CRUD ---------- */
 function getProducts() {
-  try {
-    return JSON.parse(localStorage.getItem(PRODUCTS_KEY)) || [];
-  } catch (e) {
-    return [];
-  }
-}
-
-function saveProducts(products) {
-  localStorage.setItem(PRODUCTS_KEY, JSON.stringify(products));
-  markDraftDirty();
+  return _products;
 }
 
 function getProductById(id) {
-  return getProducts().find((p) => p.id === id) || null;
+  return _products.find((p) => p.id === id) || null;
 }
 
-function generateId() {
-  return "p" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-}
-
-function addProduct(data) {
-  const products = getProducts();
-  const product = {
-    id: generateId(),
-    name: data.name,
-    price: Number(data.price) || 0,
-    category: data.category || "Uncategorized",
-    stock: Number(data.stock) || 0,
-    image: data.image || "https://picsum.photos/seed/plug-default/500/400",
-    description: data.description || "",
-  };
-  products.push(product);
-  saveProducts(products);
+async function addProduct(data) {
+  const res = await fetch("/admin/api/products", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  if (!res.ok) throw new Error("Failed to add product. Check your connection and try again.");
+  const product = await res.json();
+  _products.push(product);
   return product;
 }
 
-function updateProduct(id, updates) {
-  const products = getProducts();
-  const idx = products.findIndex((p) => p.id === id);
-  if (idx === -1) return null;
-  products[idx] = { ...products[idx], ...updates };
-  saveProducts(products);
-  return products[idx];
+async function updateProduct(id, updates) {
+  const res = await fetch(`/admin/api/products/${encodeURIComponent(id)}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updates),
+  });
+  if (!res.ok) throw new Error("Failed to update product. Check your connection and try again.");
+  const product = await res.json();
+  const idx = _products.findIndex((p) => p.id === id);
+  if (idx !== -1) _products[idx] = product;
+  return product;
 }
 
-function deleteProduct(id) {
-  const products = getProducts().filter((p) => p.id !== id);
-  saveProducts(products);
+async function deleteProduct(id) {
+  const res = await fetch(`/admin/api/products/${encodeURIComponent(id)}`, { method: "DELETE" });
+  if (!res.ok) throw new Error("Failed to delete product. Check your connection and try again.");
+  _products = _products.filter((p) => p.id !== id);
 }
 
 function getCategories() {

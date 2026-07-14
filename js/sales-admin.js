@@ -85,8 +85,8 @@ function renderArchiveTable() {
           <td>${totals.units}</td>
           <td>${totals.count}</td>
           <td class="actions-cell">
-            <button class="btn btn-outline btn-sm archive-export-btn">⬇ Download .xlsx</button>
-            <button class="btn btn-primary btn-sm archive-force-export-btn">⚡ Sync &amp; Export</button>
+            <button class="btn btn-outline btn-sm archive-view-btn">⬇ View Report</button>
+            <button class="btn btn-primary btn-sm archive-regenerate-btn">⚡ Regenerate</button>
           </td>
         </tr>
       `;
@@ -123,7 +123,7 @@ function initSaleForm() {
     }
   });
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const name = nameInput.value.trim();
     const category = categoryInput.value.trim();
@@ -134,13 +134,21 @@ function initSaleForm() {
 
     if (!name || !category || unitPrice === "" || quantity === "") return;
 
-    const match = products.find((p) => p.name === name);
-    addSale({ name, category, date, unitPrice, quantity, note, productId: match ? match.id : null });
+    const submitBtn = form.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    try {
+      const match = products.find((p) => p.name === name);
+      await addSale({ name, category, date, unitPrice, quantity, note, productId: match ? match.id : null });
 
-    form.reset();
-    dateInput.value = todayDateStr();
-    document.getElementById("saleQuantity").value = 1;
-    renderAll();
+      form.reset();
+      dateInput.value = todayDateStr();
+      document.getElementById("saleQuantity").value = 1;
+      renderAll();
+    } catch (err) {
+      alert(err.message);
+    } finally {
+      submitBtn.disabled = false;
+    }
   });
 }
 
@@ -148,7 +156,7 @@ function initSalesTable() {
   const tbody = document.getElementById("currentMonthBody");
   if (!tbody) return;
 
-  tbody.addEventListener("click", (e) => {
+  tbody.addEventListener("click", async (e) => {
     const row = e.target.closest("tr");
     if (!row || !row.dataset.id) return;
     const id = row.dataset.id;
@@ -167,8 +175,12 @@ function initSalesTable() {
 
     if (e.target.closest(".delete-btn")) {
       if (confirm("Delete this sale? This cannot be undone.")) {
-        deleteSale(id);
-        renderAll();
+        try {
+          await deleteSale(id);
+          renderAll();
+        } catch (err) {
+          alert(err.message);
+        }
       }
       return;
     }
@@ -183,9 +195,13 @@ function initSalesTable() {
 
       if (!name || !category || quantity === "" || unitPrice === "") return;
 
-      updateSale(id, { date, name, category, quantity: Number(quantity), unitPrice: Number(unitPrice), note });
-      editingSaleId = null;
-      renderAll();
+      try {
+        await updateSale(id, { date, name, category, quantity: Number(quantity), unitPrice: Number(unitPrice), note });
+        editingSaleId = null;
+        renderAll();
+      } catch (err) {
+        alert(err.message);
+      }
       return;
     }
   });
@@ -199,111 +215,58 @@ function initArchiveTable() {
     if (!row) return;
     const monthKey = row.dataset.month;
 
-    if (e.target.closest(".archive-export-btn")) {
-      const exported = exportSalesMonthToExcel(monthKey);
-      if (!exported) alert("No sales found for that month.");
+    if (e.target.closest(".archive-view-btn")) {
+      downloadSalesReport(monthKey);
       return;
     }
 
-    const forceBtn = e.target.closest(".archive-force-export-btn");
-    if (forceBtn) {
-      if (!confirm(`Sync all local sales and regenerate sales-reports/${monthKey}.xlsx on GitHub now?`)) return;
-      forceBtn.disabled = true;
-      forceBtn.textContent = "Working…";
+    const regenBtn = e.target.closest(".archive-regenerate-btn");
+    if (regenBtn) {
+      if (!confirm(`Regenerate sales-reports/${monthKey}.xlsx now?`)) return;
+      regenBtn.disabled = true;
+      regenBtn.textContent = "Working…";
       try {
-        const result = await syncAndExportSalesMonth(monthKey);
-        renderSalesSyncStatus();
+        const result = await forceExportSalesMonth(monthKey);
         alert(
           result.skipped
-            ? `No sales found for ${monthLabel(monthKey)} in the synced data — nothing to export.`
-            : `sales-reports/${monthKey}.xlsx updated on GitHub (${result.count} entries).`
+            ? `No sales found for ${monthLabel(monthKey)} — nothing to export.`
+            : `sales-reports/${monthKey}.xlsx regenerated (${result.count} entries).`
         );
       } catch (err) {
         alert(err.message);
       } finally {
-        forceBtn.disabled = false;
-        forceBtn.innerHTML = "⚡ Sync &amp; Export";
+        regenBtn.disabled = false;
+        regenBtn.innerHTML = "⚡ Regenerate";
       }
     }
   });
 }
 
-function renderSalesSyncStatus() {
-  const el = document.getElementById("salesSyncStatus");
-  if (!el) return;
-  const info = getSalesLastSyncInfo();
-  if (!info) {
-    el.textContent = "";
-    return;
-  }
-  const time = new Date(info.time).toLocaleTimeString();
-  if (info.publish) {
-    el.innerHTML = `Synced to GitHub at ${time} — ${info.count} sales. ` +
-      `<a href="${info.url}" target="_blank" rel="noopener">View commit</a>.`;
-    return;
-  }
-  el.textContent = `Last loaded ${info.count} sales at ${time}.`;
-}
-
 function initSalesPage() {
-  const rollover = checkSalesMonthRollover();
-  if (rollover && rollover.exported) {
-    alert(`${monthLabel(rollover.closedMonth)} closed out — its sales report downloaded automatically.`);
-  }
-
   renderAll();
-  renderSalesSyncStatus();
   initSaleForm();
   initSalesTable();
   initArchiveTable();
 
-  const exportBtn = document.getElementById("exportMonthBtn");
-  if (exportBtn) {
-    exportBtn.addEventListener("click", () => {
-      const exported = exportSalesMonthToExcel(currentMonthKey());
-      if (!exported) alert("No sales logged this month yet.");
-    });
-  }
-
-  const syncBtn = document.getElementById("syncSalesBtn");
-  if (syncBtn) {
-    syncBtn.addEventListener("click", async () => {
-      if (!confirm("Sync the full sales log to the live site now? This commits data/sales.json directly to main.")) return;
-      syncBtn.disabled = true;
-      syncBtn.textContent = "Syncing…";
-      try {
-        const data = await syncSalesToGitHub();
-        renderSalesSyncStatus();
-        alert(`Synced ${data.count} sales to main.`);
-      } catch (err) {
-        alert(err.message);
-      } finally {
-        syncBtn.disabled = false;
-        syncBtn.textContent = "⬆ Sync to GitHub";
-      }
-    });
-  }
-
-  const forceExportBtn = document.getElementById("forceExportMonthBtn");
-  if (forceExportBtn) {
-    forceExportBtn.addEventListener("click", async () => {
+  const regenerateBtn = document.getElementById("regenerateMonthBtn");
+  if (regenerateBtn) {
+    regenerateBtn.addEventListener("click", async () => {
       const monthKey = currentMonthKey();
-      if (!confirm(`Sync all local sales and generate sales-reports/${monthKey}.xlsx on GitHub right now?`)) return;
-      forceExportBtn.disabled = true;
-      forceExportBtn.textContent = "Working…";
+      if (!confirm(`Regenerate sales-reports/${monthKey}.xlsx now instead of waiting for the automatic monthly report?`)) return;
+      regenerateBtn.disabled = true;
+      regenerateBtn.textContent = "Working…";
       try {
-        const result = await syncAndExportSalesMonth(monthKey);
-        renderSalesSyncStatus();
+        const result = await forceExportSalesMonth(monthKey);
         alert(
           result.skipped
             ? `No sales logged for ${monthLabel(monthKey)} yet — nothing to export.`
-            : `sales-reports/${monthKey}.xlsx updated on GitHub (${result.count} entries).`
+            : `sales-reports/${monthKey}.xlsx regenerated (${result.count} entries).`
         );
       } catch (err) {
         alert(err.message);
       } finally {
-        forceExportBtn.disabled = false;
-        forceExportBtn.innerHTML = "⚡ Sync &amp; Export to GitHub Now";
+        regenerateBtn.disabled = false;
+        regenerateBtn.innerHTML = "⚡ Regenerate This Month's Report";
       }
     });
   }

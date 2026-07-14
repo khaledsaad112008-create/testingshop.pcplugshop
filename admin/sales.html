@@ -91,18 +91,14 @@
       <div class="panel-header-row">
         <h2>This Month's Sales</h2>
         <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="btn btn-outline" id="exportMonthBtn">⬇ Download This Month (.xlsx)</button>
-          <button class="btn btn-outline" id="syncSalesBtn">⬆ Sync to GitHub</button>
-          <button class="btn btn-primary" id="forceExportMonthBtn">⚡ Sync &amp; Export to GitHub Now</button>
+          <button class="btn btn-primary" id="regenerateMonthBtn">⚡ Regenerate This Month's Report</button>
         </div>
       </div>
       <p class="page-sub" style="margin:-10px 0 18px;font-size:0.85rem;">
-        Sales stay in this browser until synced. A report for a month normally only gets generated
-        automatically on the 1st of the next month — use "Sync &amp; Export to GitHub Now" to force
-        this month's (or a past month's) <code>sales-reports/</code> file to update immediately
-        instead of waiting.
+        Sales save instantly — nothing to sync. A report for the previous month is generated
+        automatically on the 1st; use "Regenerate This Month's Report" to force it to update right
+        now instead of waiting (e.g. right after correcting a sale).
       </p>
-      <p id="salesSyncStatus" class="page-sub" style="margin:-8px 0 18px;font-size:0.8rem;"></p>
       <div class="table-wrap">
         <table class="admin-table">
           <thead>
@@ -144,12 +140,11 @@
     </section>
   </main>
 
-  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-  <script src="../js/products.js?v=9"></script>
-  <script src="../js/sales.js?v=2"></script>
-  <script src="../js/admin.js?v=7"></script>
+  <script src="../js/products.js?v=10"></script>
+  <script src="../js/sales.js?v=3"></script>
+  <script src="../js/admin.js?v=8"></script>
   <script src="../js/theme.js?v=2"></script>
-  <script src="../js/sales-admin.js?v=2"></script>
+  <script src="../js/sales-admin.js?v=3"></script>
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
       requireAdminAuth();

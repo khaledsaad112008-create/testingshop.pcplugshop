@@ -1,4 +1,5 @@
 .claude/
 *.xlsx
+!sales-reports/*.xlsx
 .wrangler/
 node_modules/

@@ -110,21 +110,10 @@
     </section>
 
     <section class="panel">
-      <div class="panel-header-row">
-        <h2>All Products</h2>
-        <div style="display:flex;gap:8px;">
-          <button class="btn btn-outline" id="reloadDbBtn">↻ Reload from Database</button>
-          <button class="btn btn-outline" id="exportDbBtn">⬇ Export Database</button>
-          <button class="btn btn-primary" id="publishDbBtn">⬆ Publish to GitHub</button>
-        </div>
-      </div>
+      <h2>All Products</h2>
       <p class="page-sub" style="margin:-10px 0 18px;font-size:0.85rem;">
-        Your edits only apply to this browser until published. "Publish to GitHub" commits
-        <code>data/products.json</code> straight to the live site (changes go live within a minute
-        or two). "Export Database" remains as a manual fallback, and "Reload from Database" discards
-        this draft and re-syncs from what's currently published.
+        Edits save instantly and are live on the site immediately — nothing to publish.
       </p>
-      <p id="dbSyncStatus" class="page-sub" style="margin:-8px 0 18px;font-size:0.8rem;"></p>
       <div class="table-wrap">
         <table class="admin-table">
           <thead>
@@ -143,10 +132,10 @@
     </section>
   </main>
 
-  <script src="../js/products.js?v=9"></script>
-  <script src="../js/sales.js?v=2"></script>
+  <script src="../js/products.js?v=10"></script>
+  <script src="../js/sales.js?v=3"></script>
   <script src="../js/cart.js?v=5"></script>
-  <script src="../js/admin.js?v=7"></script>
+  <script src="../js/admin.js?v=8"></script>
   <script src="../js/theme.js?v=2"></script>
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
