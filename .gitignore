@@ -3,3 +3,4 @@
 !sales-reports/*.xlsx
 .wrangler/
 node_modules/
+server/*.log
