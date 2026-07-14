@@ -1,7 +1,16 @@
 name = "pcplug-publish-worker"
-main = "worker/publish.js"
+main = "worker/index.js"
 compatibility_date = "2026-07-13"
 
 [[routes]]
 pattern = "vivapcplug.dpdns.org/admin/api/publish*"
 zone_name = "vivapcplug.dpdns.org"
+
+[[routes]]
+pattern = "vivapcplug.dpdns.org/admin/api/sales/*"
+zone_name = "vivapcplug.dpdns.org"
+
+# Runs at 01:00 UTC on the 1st of every month — generates and commits last
+# month's sales-reports/YYYY-MM.xlsx automatically, no admin visit required.
+[triggers]
+crons = ["0 1 1 * *"]

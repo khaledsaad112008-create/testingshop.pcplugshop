@@ -19,6 +19,7 @@
       <span class="badge">Admin</span>
       <nav class="admin-nav">
         <a href="dashboard.html" class="active">Dashboard</a>
+        <a href="sales.html">Sales</a>
         <a href="reports.html">Reports</a>
         <a href="../index.html">View Store</a>
         <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
@@ -45,6 +46,27 @@
         <div class="value" id="statStockValue">0.00 QAR</div>
       </div>
     </div>
+
+    <section class="panel">
+      <div class="panel-header-row">
+        <h2>Trading — <span id="tradingMonthLabel">This Month</span></h2>
+        <a href="sales.html" class="btn btn-outline btn-sm">Go to Sales →</a>
+      </div>
+      <div class="stat-row" style="margin-bottom:0;">
+        <div class="stat-card">
+          <div class="label">Revenue</div>
+          <div class="value" id="tradingRevenue">0.00 QAR</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Units Sold</div>
+          <div class="value" id="tradingUnits">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="label">Sales Logged</div>
+          <div class="value" id="tradingCount">0</div>
+        </div>
+      </div>
+    </section>
 
     <section class="panel">
       <h2>Add New Product</h2>
@@ -122,18 +144,27 @@
   </main>
 
   <script src="../js/products.js?v=9"></script>
+  <script src="../js/sales.js?v=1"></script>
   <script src="../js/cart.js?v=5"></script>
   <script src="../js/admin.js?v=7"></script>
   <script src="../js/theme.js?v=2"></script>
   <script>
     document.addEventListener("DOMContentLoaded", async () => {
       await loadProducts();
+      await loadSales();
       const categoryList = document.getElementById("categoryList");
       categoryList.innerHTML = getCategories()
         .map((c) => `<option value="${c}"></option>`)
         .join("");
       initDashboardPage();
       initThemeToggle();
+
+      const monthKey = currentMonthKey();
+      document.getElementById("tradingMonthLabel").textContent = monthLabel(monthKey);
+      const totals = monthTotals(getSalesForMonth(monthKey));
+      document.getElementById("tradingRevenue").textContent = formatPrice(totals.revenue);
+      document.getElementById("tradingUnits").textContent = totals.units;
+      document.getElementById("tradingCount").textContent = totals.count;
     });
   </script>
 </body>

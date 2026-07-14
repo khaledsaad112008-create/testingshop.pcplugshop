@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <script>(function(){try{var t=localStorage.getItem('pc_plug_theme')||'light';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Sales — PC PLUG Admin</title>
+  <link rel="icon" href="../images/logo.png" type="image/png" />
+  <link rel="stylesheet" href="../css/admin.css?v=4" />
+</head>
+<body class="admin-body">
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <a href="dashboard.html" class="brand">
+        <img src="../images/logo.png" alt="PC PLUG logo" />
+        <span>PC PLUG</span>
+      </a>
+      <span class="badge">Admin</span>
+      <nav class="admin-nav">
+        <a href="dashboard.html">Dashboard</a>
+        <a href="sales.html" class="active">Sales</a>
+        <a href="reports.html">Reports</a>
+        <a href="../index.html">View Store</a>
+        <button type="button" class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">🌙</button>
+        <a href="#" id="logoutBtn">Log Out</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <h1>Sales</h1>
+    <p class="page-sub">Log every sold item — on-site or off-site, catalog product or one-off — grouped by month</p>
+
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="label" id="currentMonthLabel">This Month</div>
+        <div class="value" id="statMonthRevenue">0.00 QAR</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Units Sold</div>
+        <div class="value" id="statMonthUnits">0</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Sales Logged</div>
+        <div class="value" id="statMonthCount">0</div>
+      </div>
+    </div>
+
+    <section class="panel">
+      <h2>Log a Sale</h2>
+      <p class="page-sub" style="margin:-10px 0 18px;font-size:0.85rem;">
+        Pick an existing product to autofill its name/category/price, or just type a name for
+        anything not in the catalog. The price field is always editable — use it as-is even if it
+        differs from the current catalog price.
+      </p>
+      <form id="addSaleForm">
+        <div class="form-grid">
+          <div class="field full">
+            <label for="saleName">Product Name</label>
+            <input type="text" id="saleName" list="saleProductList" required autocomplete="off" />
+            <datalist id="saleProductList"></datalist>
+          </div>
+          <div class="field">
+            <label for="saleCategory">Category</label>
+            <input type="text" id="saleCategory" list="categoryList" required />
+            <datalist id="categoryList"></datalist>
+          </div>
+          <div class="field">
+            <label for="saleDate">Date Sold</label>
+            <input type="date" id="saleDate" required />
+          </div>
+          <div class="field">
+            <label for="saleUnitPrice">Unit Price (QAR)</label>
+            <input type="number" id="saleUnitPrice" min="0" step="0.01" required />
+          </div>
+          <div class="field">
+            <label for="saleQuantity">Quantity</label>
+            <input type="number" id="saleQuantity" min="1" step="1" value="1" required />
+          </div>
+          <div class="field full">
+            <label for="saleNote">Note (optional)</label>
+            <input type="text" id="saleNote" placeholder="e.g. sold via WhatsApp, bundled with a case" />
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">Log Sale</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header-row">
+        <h2>This Month's Sales</h2>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-outline" id="exportMonthBtn">⬇ Download This Month (.xlsx)</button>
+          <button class="btn btn-primary" id="syncSalesBtn">⬆ Sync to GitHub</button>
+        </div>
+      </div>
+      <p class="page-sub" style="margin:-10px 0 18px;font-size:0.85rem;">
+        Sales stay in this browser until synced. Syncing commits <code>data/sales.json</code> to
+        the live site, which also feeds the automatic monthly report — a report for a month only
+        gets generated on the 1st if that month's sales were synced at some point during it.
+      </p>
+      <p id="salesSyncStatus" class="page-sub" style="margin:-8px 0 18px;font-size:0.8rem;"></p>
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Product</th>
+              <th>Category</th>
+              <th>Qty</th>
+              <th>Unit Price</th>
+              <th>Total</th>
+              <th>Note</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="currentMonthBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Monthly Archive</h2>
+      <p class="page-sub" style="margin:-10px 0 18px;font-size:0.85rem;">
+        Every past month with logged sales, closed out automatically once the calendar rolls over.
+      </p>
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Revenue</th>
+              <th>Units</th>
+              <th>Sales</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="archiveBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+  <script src="../js/products.js?v=9"></script>
+  <script src="../js/sales.js?v=1"></script>
+  <script src="../js/admin.js?v=7"></script>
+  <script src="../js/theme.js?v=2"></script>
+  <script src="../js/sales-admin.js?v=1"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      requireAdminAuth();
+      await loadProducts();
+      await loadSales();
+      const categoryList = document.getElementById("categoryList");
+      categoryList.innerHTML = getCategories()
+        .map((c) => `<option value="${c}"></option>`)
+        .join("");
+      initSalesPage();
+      initThemeToggle();
+
+      const logoutBtn = document.getElementById("logoutBtn");
+      if (logoutBtn) logoutBtn.addEventListener("click", (e) => { e.preventDefault(); adminLogout(); });
+    });
+  </script>
+</body>
+</html>

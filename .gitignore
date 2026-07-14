@@ -1,3 +1,4 @@
 .claude/
 *.xlsx
 .wrangler/
+node_modules/
