@@ -79,5 +79,14 @@
     "stock": 15,
     "description": "Compact 65% mechanical gaming keyboard with hot-swappable 3-pin red switches and per-key RGB across 17 lighting modes. A durable navy blue colorway gives it a distinct look without sacrificing performance.",
     "image": "/images/products/ig-fantech-keyboard.jpg"
+  },
+  {
+    "id": "pmrki3amguian",
+    "name": "[TEST - delete me] E2E verification",
+    "price": 1,
+    "category": "GPUs",
+    "stock": 1,
+    "image": "https://picsum.photos/seed/plug-default/500/400",
+    "description": "temporary test, will be deleted"
   }
 ]
