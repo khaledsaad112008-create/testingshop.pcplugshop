@@ -1,9 +1,24 @@
 {
   "announcement": {
-    "enabled": false,
+    "enabled": true,
     "text": "Free delivery across Qatar on all orders!",
     "link": null
   },
-  "slides": [],
-  "banners": []
+  "slides": [
+    {
+      "id": "tmp1784103638163",
+      "image": "https://picsum.photos/seed/pcplug-square-test/800/800?extra=1&more=2",
+      "heading": "Square Ad Test",
+      "subtext": "Testing external URL with query params and ampersand.",
+      "buttonText": "",
+      "buttonLink": "",
+      "order": 0
+    }
+  ],
+  "popup": {
+    "enabled": false,
+    "image": "",
+    "text": "",
+    "link": null
+  }
 }
