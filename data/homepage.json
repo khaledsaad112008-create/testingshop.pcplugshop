@@ -4,16 +4,6 @@
     "text": "Free delivery across Qatar on all orders!",
     "link": null
   },
-  "slides": [
-    {
-      "id": "tmp1784101481341",
-      "image": "",
-      "heading": "Big Summer Sale",
-      "subtext": "Up to 20% off select GPUs this week only.",
-      "buttonText": "Shop Deals",
-      "buttonLink": "index.html",
-      "order": 0
-    }
-  ],
+  "slides": [],
   "banners": []
 }
