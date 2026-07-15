@@ -16,9 +16,9 @@
     }
   ],
   "popup": {
-    "enabled": false,
-    "image": "",
-    "text": "",
+    "enabled": true,
+    "image": "https://picsum.photos/seed/pcplug-popup-test/600/600",
+    "text": "Welcome! Check out this week deals.",
     "link": null
   }
 }
