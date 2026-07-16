@@ -119,5 +119,16 @@
     "image": "data:image/webp;base64,UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAUAmJaQAA3AA/v02aAA=",
     "description": "",
     "description_ar": ""
+  },
+  {
+    "id": "pmrnca474cjg1",
+    "name": "Malformed Image Test",
+    "name_ar": "",
+    "price": 1,
+    "category": "CPUs",
+    "stock": 1,
+    "image": "https://picsum.photos/seed/plug-default/500/400",
+    "description": "",
+    "description_ar": ""
   }
 ]
