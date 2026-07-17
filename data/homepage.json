@@ -31,19 +31,6 @@
       "buttonText_ar": "",
       "buttonLink": "",
       "order": 1
-    },
-    {
-      "id": "tmp1784311322309",
-      "image": "https://picsum.photos/seed/test-laptop/1920/1080",
-      "imageMobile": "https://picsum.photos/seed/test-mobile/1080/1350",
-      "heading": "TEST SLIDE - DELETE ME",
-      "heading_ar": "",
-      "subtext": "",
-      "subtext_ar": "",
-      "buttonText": "",
-      "buttonText_ar": "",
-      "buttonLink": "",
-      "order": 2
     }
   ],
   "popup": {
